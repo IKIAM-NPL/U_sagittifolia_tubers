@@ -47,7 +47,7 @@ init_log(log_file = paste0(ppath, 'Result/LC-MS_Negative/log_LC-MS_Negative.txt'
 Next, the feature list was imported using the read_from_excel function
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-NEG_data <- read_from_excel(file = paste0(ppath, "Data/NEG_feature_list_2.xlsx"), sheet = 1, corner_row = 4, corner_column = "D", split_by = c("Column", "Ion mode"))
+NEG_data <- read_from_excel(file = paste0(ppath, "Data/NEG_feature_list.xlsx"), sheet = 1, corner_row = 4, corner_column = "D", split_by = c("Column", "Ion mode"))
 ```
 
 Once the data was read, the next step was to create a MetaboSet in order to create a specific R object.
