@@ -140,6 +140,9 @@ ggplot(POS_scores, aes(PC1, PC2, shape = Group, color = Group)) +
   geom_point(size = 3) +
   guides(x=guide_axis(title = "PC 1 (43%)"), y=guide_axis(title = "PC 2 (20%)")) +
   theme_classic()
+
+# Save plot
+#ggsave('Result/LC-MS_Positive/LC_MS_Positive_Score_Plot.png', width = 5, height = 4, device='png', dpi="print")
 ```  
 
 ## Plotting loading results
@@ -152,7 +155,7 @@ POS_loadings <- POS_pca_noQC$rotation %>%   # Extract loadings
 ## Creating an artificial table with Feature name and Compound column
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-POS_feat_name <- readxl::read_excel("POS_Iden_Comp_2.xlsx", 1)
+POS_feat_name <- readxl::read_excel("POS_Metabolites.xlsx", 1)
 
 # Creating a new small table of the annotated compounds
 POS_compouds_all <- left_join(POS_feat_name, POS_loadings)
@@ -161,11 +164,14 @@ POS_compouds_all <- left_join(POS_feat_name, POS_loadings)
 ggplot(POS_loadings, aes(PC1, PC2)) + 
   geom_point(alpha = 0.1) +
   theme_classic() + 
-  geom_point(data = POS_compouds_all, aes(shape = Level, color = Level), size = 3) +
+  geom_point(data = POS_compouds_all, aes(shape = Identification_level, color = Identification_level), size = 3) +
   ggrepel::geom_label_repel(data = POS_compouds_all, aes(label = Compound),
                             box.padding = 0.3) +
   guides(x=guide_axis(title = "PC 1 (43%)"), y=guide_axis(title = "PC 2 (20%)")) +
   ggsci::scale_color_aaas()
+
+# Save plot
+#ggsave('Result/LC-MS_Positive/LC_MS_Positive_Loadings_Plot.png', width = 15, height = 9, device='png', dpi="print")
 ```
 
 # Heat map plot
@@ -209,7 +215,7 @@ heatmap.2(y,  Rowv = as.dendrogram(hr),  Colv = as.dendrogram(hc),  col = mycol,
 ## Save Heatmap plot
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
-png(filename ="LC-MS2-Pos-HeatMap.png", width = 10, height = 6, units = "in", pointsize = 12, res=300)
+png(filename ="Result/LC-MS_Positive/LC_MS2_Pos_HeatMap.png", width = 10, height = 6, units = "in", pointsize = 12, res=300)
 heatmap.2(y, Rowv = as.dendrogram(hr), Colv = as.dendrogram(hc), col = mycol, density.info = "none", trace = "none", dendrogram = "both", scale = "row", labRow = NULL, labCol = NULL, margins = c(4, 12), key = TRUE, keysize = 0.7, key.xlab = NA, key.ylab = NA)
 dev.off() 
 ```

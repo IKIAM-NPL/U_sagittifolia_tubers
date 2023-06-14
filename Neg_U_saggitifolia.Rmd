@@ -158,7 +158,7 @@ ggplot(NEG_scores, aes(PC1, PC2, shape = Group, color = Group)) +
   theme_classic()
 
 # Save plot
-#ggsave('Result/LC-MS_Negative/LC_MS_Negative_Score_Plot.png', width = 6.5, height = 4.3, device='png', dpi=300)
+#ggsave('Result/LC-MS_Negative/LC_MS_Negative_Score_Plot.png', width = 5, height = 4, device='png', dpi="print")
 ```  
 
 Plotting loading results.
@@ -171,7 +171,7 @@ NEG_loadings <- NEG_pca_noQC$rotation %>%    # Extract loadings
 Creating an artificial table with Feature name and Compound column.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-NEG_feat_name <- readxl::read_excel("NEG_Iden_Comp_4.xlsx", 1)
+NEG_feat_name <- readxl::read_excel("NEG_Metabolites.xlsx", 1)
 
 # Creating a new small table of the annotated compounds
 NEG_compouds_all <- left_join(NEG_feat_name, NEG_loadings)
@@ -187,7 +187,7 @@ ggplot(NEG_loadings, aes(PC1, PC2)) +
   ggsci::scale_color_aaas()
 
 # Save plot
-#ggsave('Result/LC-MS_Negative/LC_MS_Negative_Loadings_Plot.png', width = 13, height = 7.5, device='png', dpi=700)
+#ggsave('Result/LC-MS_Negative/LC_MS_Negative_Loadings_Plot.png', width = 15, height = 9, device='png', dpi="print")
 
 ```
 
