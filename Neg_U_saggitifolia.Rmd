@@ -2,7 +2,10 @@
 title: "LC-MS of *U.saggitifolia* in negative ionization mode"
 author: "Pablo Corella, Jefferson Pastuña"
 date: "2023-06-12"
-output: html_document
+output:
+  github_document:
+    toc: true
+    toc_depth: 3
 ---
 
 ```{r setup, include=FALSE}
@@ -10,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
 usethis::git_vaccinate()
 ```
 
-## Introduction
+# Introduction
 
 The present document aims to record the procedure given for the statistical analysis of secondary metabolites present in the different growth stages of *Urospatha saggitifolia*. For each step a brief explanation, the code and graphics obtained are included.
 
@@ -24,7 +27,7 @@ In this case, the table was obtained with the help of both programs. The data wa
 
 Modifications made to the raw (*.txt) file can be summarized in adding and renaming columns. The added columns "Column" and "Ion Mode" allow to analyze samples with different types of columns and with different ionization modes respectively. Also, the cells corresponding to mass and retention time must be renamed so that the package can detect and process it.
 
-## Notame workflow
+# Notame workflow
 
 As a first step for the analysis, all the necessary libraries were installed and loaded in Rstudio.
 
@@ -118,9 +121,9 @@ NEG_PCA_2<-plot_pca(NEG_compressedQC)
 NEG_PCA_2
 ```
 
-# Second PCA and loading plot
+## Second PCA and loading plot
 
-Droping flagged features
+Droping flagged features.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
 NEG_no_flag <- drop_flagged(NEG_compressedQC)
@@ -190,12 +193,12 @@ ggplot(NEG_loadings, aes(PC1, PC2)) +
 #ggsave('Result/LC-MS_Negative/LC_MS_Negative_Loadings_Plot.png', width = 15, height = 9, device='png', dpi="print")
 ```
 
-# Heat map plot
+## Heat map plot
 
 Loaded of identified metabolites abundance from Excel file.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
-met_hetmap <- readxl::read_excel("NEG_Data_Pablo_to_Hetmap.xlsx", 3)
+met_hetmap <- readxl::read_excel("NEG_Metabolites_Hetmap.xlsx", 3)
 met_hetmap <- met_hetmap[order(met_hetmap$A1),]     # sorted by column
 row.names(met_hetmap) <- met_hetmap$X               # Named rows
 met_hetmap_m <- data.matrix(met_hetmap)             # DataFrame
