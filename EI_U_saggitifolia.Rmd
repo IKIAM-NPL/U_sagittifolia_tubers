@@ -2,7 +2,10 @@
 title: "GC-MS of *U.saggitifolia*"
 author: "Jefferson Pastuña, Pablo Corella"
 date: "2023-06-14"
-output: html_document
+output:
+  github_document:
+    toc: true
+    toc_depth: 3
 ---
 
 ```{r setup, include=FALSE}
