@@ -2,7 +2,10 @@
 title: "LC-MS of *U.saggitifolia* in positive ionization mode"
 author: "Pablo Corella, Jefferson Pastuña"
 date: "2023-06-11"
-output: html_document
+output:
+  github_document:
+    toc: true
+    toc_depth: 3
 ---
 
 ```{r setup, include=FALSE}
@@ -10,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
 usethis::git_vaccinate()
 ```
 
+# Workspace
 ## Charging necesary libraries
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
@@ -95,7 +99,7 @@ POS_clusteredQC <- cluster_features(POS_corrected, rt_window = 1/60, all_feature
 POS_compressedQC <- compress_clusters(POS_clusteredQC)
 ```
 
-# Plotting the notame PCA workflow
+## Plotting the notame PCA workflow
 
 ```{r}
 POS_PCA_2<-plot_pca(POS_compressedQC)
@@ -152,7 +156,7 @@ POS_loadings <- POS_pca_noQC$rotation %>%   # Extract loadings
   data.frame(Feature_name = rownames(.))    # New column with feat name
 ```
 
-## Creating an artificial table with Feature name and Compound column
+Creating a table with Feature name and Compound column
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
 POS_feat_name <- readxl::read_excel("POS_Metabolites.xlsx", 1)
@@ -179,7 +183,7 @@ ggplot(POS_loadings, aes(PC1, PC2)) +
 Loaded of identified metabolites abundance from Excel file.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
-met_hetmap <- readxl::read_excel("POS_Data_Pablo_to_Hetmap.xlsx", 3)
+met_hetmap <- readxl::read_excel("POS_Metabolites_Hetmap.xlsx", 3)
 met_hetmap <- met_hetmap[order(met_hetmap$A1),]     # sorted by column
 row.names(met_hetmap) <- met_hetmap$X               # Named rows
 met_hetmap_m <- data.matrix(met_hetmap)             # DataFrame
