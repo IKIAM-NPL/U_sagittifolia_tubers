@@ -3,12 +3,11 @@ GC-MS of *U.saggitifolia*
 Jefferson Pastuña, Pablo Corella
 2023-06-14
 
-- <a href="#introduction" id="toc-introduction">Introduction</a>
-- <a href="#before-to-start" id="toc-before-to-start">Before to start</a>
-- <a href="#notame-workflow" id="toc-notame-workflow">Notame workflow</a>
-- <a href="#preprocessing" id="toc-preprocessing">Preprocessing</a>
-- <a href="#second-pca-and-loading-plot"
-  id="toc-second-pca-and-loading-plot">Second PCA and loading plot</a>
+- [Introduction](#introduction)
+- [Before to start](#before-to-start)
+- [Notame workflow](#notame-workflow)
+- [Preprocessing](#preprocessing)
+- [Second PCA and loading plot](#second-pca-and-loading-plot)
 
 ## Introduction
 
@@ -65,23 +64,27 @@ library(ggsci)
 Then, a log system was added to have a record of each process executed.
 
 ``` r
-ppath <- "C:/Users/F4ss0/Documents/Ikiam21062022/Tesis-Pablo-Corella/U_sagittifolia_tubers/"
-init_log(log_file = paste0(ppath, "Result/GC-MS/log_GC-MS_EI.txt"))
+init_log(log_file = "Result/GC-MS/log_GC-MS_EI.txt")
 ```
 
-    ## INFO [2023-06-27 09:44:50] Starting logging
+    ## INFO [2023-07-04 12:35:44] Starting logging
 
 Next, the feature list was imported.
 
 ``` r
-data <- read_from_excel(file = paste0(ppath, "Data/EI_feature_list.xlsx"), sheet = 1, corner_row = 4, corner_column = "E", split_by = c("Column", "Ion Mode"))
+data <- read_from_excel(file = "Data/EI_feature_list.xlsx", sheet = 1, 
+                        corner_row = 4, corner_column = "E", 
+                        split_by = c("Column", "Ion Mode"))
 ```
 
 Once the data was read, the next step was to create a MetaboSet in order
 to create a specific R object.
 
 ``` r
-modes <- construct_metabosets(exprs = data$exprs, pheno_data = data$pheno_data, feature_data = data$feature_data, group_col = "Group")
+modes <- construct_metabosets(exprs = data$exprs, 
+                              pheno_data = data$pheno_data, 
+                              feature_data = data$feature_data,
+                              group_col = "Group")
 ```
 
 Finally, each mode was extracted in a single object.
@@ -218,7 +221,7 @@ loadings <- EI_pca$rotation %>%    # Extract loadings
 Creating an artificial table with Feature name and Compound column.
 
 ``` r
-EI_feat_name <- readxl::read_excel("EI_Metabolites.xlsx", 2)
+EI_feat_name <- readxl::read_excel("Data/EI_Metabolites.xlsx", 2)
 
 # Creating a new small table of the annotated compounds
 EI_compouds_all <- left_join(EI_feat_name, loadings)
@@ -246,49 +249,49 @@ Finish a record.
 finish_log()
 ```
 
-    ## INFO [2023-06-27 09:45:13] Finished analysis. Tue Jun 27 09:45:13 2023
+    ## INFO [2023-07-04 12:35:47] Finished analysis. Tue Jul  4 12:35:47 2023
     ## Session info:
     ## 
-    ## INFO [2023-06-27 09:45:13] R version 4.2.2 (2022-10-31 ucrt)
-    ## INFO [2023-06-27 09:45:13] Platform: x86_64-w64-mingw32/x64 (64-bit)
-    ## INFO [2023-06-27 09:45:13] Running under: Windows 10 x64 (build 19045)
-    ## INFO [2023-06-27 09:45:13] 
-    ## INFO [2023-06-27 09:45:13] Matrix products: default
-    ## INFO [2023-06-27 09:45:13] 
-    ## INFO [2023-06-27 09:45:13] locale:
-    ## INFO [2023-06-27 09:45:13] [1] LC_COLLATE=Spanish_Spain.utf8  LC_CTYPE=Spanish_Spain.utf8   
-    ## INFO [2023-06-27 09:45:13] [3] LC_MONETARY=Spanish_Spain.utf8 LC_NUMERIC=C                  
-    ## INFO [2023-06-27 09:45:13] [5] LC_TIME=Spanish_Spain.utf8    
-    ## INFO [2023-06-27 09:45:13] 
-    ## INFO [2023-06-27 09:45:13] attached base packages:
-    ## INFO [2023-06-27 09:45:13] [1] parallel  stats     graphics  grDevices utils     datasets  methods  
-    ## INFO [2023-06-27 09:45:13] [8] base     
-    ## INFO [2023-06-27 09:45:13] 
-    ## INFO [2023-06-27 09:45:13] other attached packages:
-    ## INFO [2023-06-27 09:45:13]  [1] ggsci_3.0.0          readxl_1.4.2.9000    dplyr_1.1.0         
-    ## INFO [2023-06-27 09:45:13]  [4] ggdendro_0.1.23      Rtsne_0.17           cowplot_1.1.2       
-    ## INFO [2023-06-27 09:45:13]  [7] patchwork_1.1.2.9000 pcaMethods_1.90.0    doParallel_1.0.14   
-    ## INFO [2023-06-27 09:45:13] [10] iterators_1.0.14     foreach_1.5.2        notame_0.2.0        
-    ## INFO [2023-06-27 09:45:13] [13] magrittr_2.0.3       ggplot2_3.4.1.9000   futile.logger_1.4.3 
-    ## INFO [2023-06-27 09:45:13] [16] Biobase_2.58.0       BiocGenerics_0.44.0 
-    ## INFO [2023-06-27 09:45:13] 
-    ## INFO [2023-06-27 09:45:13] loaded via a namespace (and not attached):
-    ## INFO [2023-06-27 09:45:13]  [1] tidyselect_1.2.0     xfun_0.37            purrr_1.0.1         
-    ## INFO [2023-06-27 09:45:13]  [4] colorspace_2.1-0     vctrs_0.5.2          generics_0.1.3      
-    ## INFO [2023-06-27 09:45:13]  [7] usethis_2.1.6        htmltools_0.5.4      viridisLite_0.4.1   
-    ## INFO [2023-06-27 09:45:13] [10] yaml_2.3.7           utf8_1.2.3           rlang_1.0.6         
-    ## INFO [2023-06-27 09:45:13] [13] gert_1.9.2           pillar_1.8.1         glue_1.6.2          
-    ## INFO [2023-06-27 09:45:13] [16] withr_2.5.0          RColorBrewer_1.1-3   lambda.r_1.2.4      
-    ## INFO [2023-06-27 09:45:13] [19] lifecycle_1.0.3      munsell_0.5.0        gtable_0.3.1        
-    ## INFO [2023-06-27 09:45:13] [22] cellranger_1.1.0     zip_2.2.2            codetools_0.2-18    
-    ## INFO [2023-06-27 09:45:13] [25] evaluate_0.20        labeling_0.4.2       knitr_1.42          
-    ## INFO [2023-06-27 09:45:13] [28] fastmap_1.1.0        sys_3.4.1            fansi_1.0.4         
-    ## INFO [2023-06-27 09:45:13] [31] highr_0.10           Rcpp_1.0.10          openssl_2.0.5       
-    ## INFO [2023-06-27 09:45:13] [34] scales_1.2.1         formatR_1.14         farver_2.1.1        
-    ## INFO [2023-06-27 09:45:13] [37] fs_1.6.1             credentials_1.3.2    askpass_1.1         
-    ## INFO [2023-06-27 09:45:13] [40] digest_0.6.31        stringi_1.7.12       openxlsx_4.2.5.2    
-    ## INFO [2023-06-27 09:45:13] [43] ggrepel_0.9.2.9999   grid_4.2.2           cli_3.6.0           
-    ## INFO [2023-06-27 09:45:13] [46] tools_4.2.2          tibble_3.1.8         futile.options_1.0.1
-    ## INFO [2023-06-27 09:45:13] [49] tidyr_1.3.0          pkgconfig_2.0.3      MASS_7.3-58.1       
-    ## INFO [2023-06-27 09:45:13] [52] rmarkdown_2.20       rstudioapi_0.14      R6_2.5.1            
-    ## INFO [2023-06-27 09:45:13] [55] compiler_4.2.2
+    ## INFO [2023-07-04 12:35:47] R version 4.2.0 (2022-04-22)
+    ## INFO [2023-07-04 12:35:47] Platform: aarch64-apple-darwin20 (64-bit)
+    ## INFO [2023-07-04 12:35:47] Running under: macOS 13.4.1
+    ## INFO [2023-07-04 12:35:47] 
+    ## INFO [2023-07-04 12:35:47] Matrix products: default
+    ## INFO [2023-07-04 12:35:47] BLAS:   /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRblas.0.dylib
+    ## INFO [2023-07-04 12:35:47] LAPACK: /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRlapack.dylib
+    ## INFO [2023-07-04 12:35:47] 
+    ## INFO [2023-07-04 12:35:47] locale:
+    ## INFO [2023-07-04 12:35:47] [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+    ## INFO [2023-07-04 12:35:47] 
+    ## INFO [2023-07-04 12:35:47] attached base packages:
+    ## INFO [2023-07-04 12:35:47] [1] parallel  stats     graphics  grDevices utils     datasets  methods  
+    ## INFO [2023-07-04 12:35:47] [8] base     
+    ## INFO [2023-07-04 12:35:47] 
+    ## INFO [2023-07-04 12:35:47] other attached packages:
+    ## INFO [2023-07-04 12:35:47]  [1] ggsci_3.0.0         readxl_1.4.2        dplyr_1.1.2        
+    ## INFO [2023-07-04 12:35:47]  [4] ggdendro_0.1.23     Rtsne_0.16          cowplot_1.1.1      
+    ## INFO [2023-07-04 12:35:47]  [7] patchwork_1.1.2     pcaMethods_1.90.0   doParallel_1.0.17  
+    ## INFO [2023-07-04 12:35:47] [10] iterators_1.0.14    foreach_1.5.2       notame_0.2.1       
+    ## INFO [2023-07-04 12:35:47] [13] magrittr_2.0.3      ggplot2_3.4.2       futile.logger_1.4.3
+    ## INFO [2023-07-04 12:35:47] [16] Biobase_2.58.0      BiocGenerics_0.44.0
+    ## INFO [2023-07-04 12:35:47] 
+    ## INFO [2023-07-04 12:35:47] loaded via a namespace (and not attached):
+    ## INFO [2023-07-04 12:35:47]  [1] tidyselect_1.2.0     xfun_0.39            purrr_1.0.1         
+    ## INFO [2023-07-04 12:35:47]  [4] colorspace_2.1-0     vctrs_0.6.3          generics_0.1.3      
+    ## INFO [2023-07-04 12:35:47]  [7] usethis_2.2.1        htmltools_0.5.5      viridisLite_0.4.2   
+    ## INFO [2023-07-04 12:35:47] [10] yaml_2.3.7           utf8_1.2.3           rlang_1.1.1         
+    ## INFO [2023-07-04 12:35:47] [13] gert_1.9.2           pillar_1.9.0         glue_1.6.2          
+    ## INFO [2023-07-04 12:35:47] [16] withr_2.5.0          RColorBrewer_1.1-3   lambda.r_1.2.4      
+    ## INFO [2023-07-04 12:35:47] [19] lifecycle_1.0.3      munsell_0.5.0        gtable_0.3.3        
+    ## INFO [2023-07-04 12:35:47] [22] cellranger_1.1.0     zip_2.3.0            codetools_0.2-19    
+    ## INFO [2023-07-04 12:35:47] [25] evaluate_0.21        labeling_0.4.2       knitr_1.43          
+    ## INFO [2023-07-04 12:35:47] [28] fastmap_1.1.1        sys_3.4.2            fansi_1.0.4         
+    ## INFO [2023-07-04 12:35:47] [31] highr_0.10           Rcpp_1.0.10          openssl_2.0.6       
+    ## INFO [2023-07-04 12:35:47] [34] scales_1.2.1         formatR_1.14         farver_2.1.1        
+    ## INFO [2023-07-04 12:35:47] [37] fs_1.6.2             credentials_1.3.2    askpass_1.1         
+    ## INFO [2023-07-04 12:35:47] [40] digest_0.6.31        stringi_1.7.12       openxlsx_4.2.5.2    
+    ## INFO [2023-07-04 12:35:47] [43] ggrepel_0.9.3        grid_4.2.0           cli_3.6.1           
+    ## INFO [2023-07-04 12:35:47] [46] tools_4.2.0          tibble_3.2.1         futile.options_1.0.1
+    ## INFO [2023-07-04 12:35:47] [49] tidyr_1.3.0          pkgconfig_2.0.3      MASS_7.3-60         
+    ## INFO [2023-07-04 12:35:47] [52] rmarkdown_2.23       rstudioapi_0.14      R6_2.5.1            
+    ## INFO [2023-07-04 12:35:47] [55] compiler_4.2.0
