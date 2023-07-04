@@ -159,7 +159,7 @@ scores_GC_plt <- ggplot(GC_scores,
   labs(color = "Growth stage", shape = "Growth stage") +
   ggsci::scale_color_startrek() +
   theme_minimal() +
-  theme(legend.position = c(0.15, 0.8), 
+  theme(legend.position = c(0.15, 0.75), 
         legend.background = element_rect(fill = "white", color = "black")) +
   theme(panel.grid = element_blank(), 
         panel.border = element_rect(fill= "transparent")) +
@@ -169,10 +169,25 @@ scores_GC_plt
 
 # Loadings
 
-ggplot(loadings, aes(PC1, PC2)) + 
+loadings_GC_plt <- ggplot(loadings, aes(PC1, PC2)) + 
   geom_point(alpha = 0.2) +
   theme_classic() + 
   geom_point(data = EI_compouds_all, size = 1) +
   ggrepel::geom_label_repel(data = EI_compouds_all, aes(label = Compound), box.padding = 0.8, label.padding = 0.27, label.r = 0.3, cex = 3) +
   guides(x=guide_axis(title = "PC 1 (62 %)"), y=guide_axis(title = "PC 2 (15 %)")) +
-  ggsci::scale_color_aaas()
+  geom_hline(yintercept = 0, lty = 2, color = "grey", alpha = 0.9)  +
+  geom_vline(xintercept = 0, lty = 2, color = "grey", alpha = 0.9)  +
+  theme(panel.grid = element_blank(), 
+        panel.border = element_rect(fill= "transparent"))
+
+
+# Second_plot  ---
+Figure2 <- arrangeGrob(scores_GC_plt, loadings_GC_plt)
+
+figure_2 <- ggpubr::as_ggplot(Figure2) +
+  draw_plot_label(label = c("A", "B"),
+                  y = c(1, 0.55), 
+                  x = c(0, 0))
+
+ggsave(filename = "Plots/jpeg/Figure_2.jpeg", plot = figure_2,
+       width = 3.25, height = 4, units = "in", dpi = 300, scale = 2)
