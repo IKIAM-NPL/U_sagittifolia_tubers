@@ -1,6 +1,7 @@
 library(ggsci)
 library(gridExtra)
 library(ggpubr)
+library(cowplot)
 ### Figure 1 -------
 
 # Pos Scores
@@ -125,9 +126,53 @@ Figure1 <- arrangeGrob(scores_post_plt, scores_neg_plt,
                                            rep(4, 2),
                                            rep(4, 2)))
                       
-figure_1 <- ggpubr::as_ggplot(Figure1)
+figure_1 <- ggpubr::as_ggplot(Figure1) +
+  draw_plot_label(label = LETTERS[1:4],
+                  x = c(0, 0.5, 0, 0),
+                  y = c(1, 1, .67, 0.35))
+
 
 ggsave(filename = "Plots/jpeg/Figure_1.jpeg", plot = figure_1,
       width = 140, height = 180, units = "mm", dpi = 300, scale = 2.5)
 
 
+# Figure 2 -----
+
+# Scores
+GC_scores <- scores  %>% mutate(Group = 
+                 case_when(
+                   Group %in% "A" ~ "Adult",
+                   Group %in% "JP" ~ "Juvenile",
+                   Group %in% "P" ~ "Seedling",
+                   Group %in% "QC" ~ "Quality control"
+                 ) ) %>% 
+  mutate(Group = factor(Group, 
+                        levels = c("Seedling", "Juvenile",
+                                   "Adult", "Quality control")))
+
+
+scores_GC_plt <- ggplot(GC_scores, 
+                          aes(PC1, PC2, shape = Group, color = Group)) +
+  geom_point(size = 3) +
+  guides(x=guide_axis(title = "PC 1 (43%)"),
+         y=guide_axis(title = "PC 2 (20%)")) +
+  labs(color = "Growth stage", shape = "Growth stage") +
+  ggsci::scale_color_startrek() +
+  theme_minimal() +
+  theme(legend.position = c(0.15, 0.8), 
+        legend.background = element_rect(fill = "white", color = "black")) +
+  theme(panel.grid = element_blank(), 
+        panel.border = element_rect(fill= "transparent")) +
+  geom_hline(yintercept = 0, lty = 2, color = "grey", alpha = 0.9) +
+  geom_vline(xintercept = 0, lty = 2, color = "grey", alpha = 0.9)
+scores_GC_plt
+
+# Loadings
+
+ggplot(loadings, aes(PC1, PC2)) + 
+  geom_point(alpha = 0.2) +
+  theme_classic() + 
+  geom_point(data = EI_compouds_all, size = 1) +
+  ggrepel::geom_label_repel(data = EI_compouds_all, aes(label = Compound), box.padding = 0.8, label.padding = 0.27, label.r = 0.3, cex = 3) +
+  guides(x=guide_axis(title = "PC 1 (62 %)"), y=guide_axis(title = "PC 2 (15 %)")) +
+  ggsci::scale_color_aaas()
