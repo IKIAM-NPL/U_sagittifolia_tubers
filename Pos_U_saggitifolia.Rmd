@@ -23,25 +23,32 @@ library(magrittr)
 library(tidyverse) 
 library(patchwork) 
 library(dplyr)
+library(here)
+library(gplots)
 ```
 
 ## Creating a record
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-ppath <- "C:/Users/F4ss0/Documents/Ikiam21062022/Tesis-Pablo-Corella/U_sagittifolia_tubers/"
-init_log(log_file = paste0(ppath, 'Result/LC-MS_Positive/log_LC-MS_Positive.txt'))
+ppath <-here()
+init_log(log_file = paste0(ppath, '/Result/LC-MS_Positive/log_LC-MS_Positive.txt'))
 ```
 
 ## Importing data
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-POS_data <- read_from_excel(file = paste0(ppath, "Data/POS_feature_list.xlsx"), sheet = 1, corner_row = 4, corner_column = "E", split_by = c("Column", "Ion mode"))
+POS_data <- read_from_excel(file =  "Data/POS_feature_list.xlsx", sheet = 1,
+                            corner_row = 4, corner_column = "E",
+                            split_by = c("Column", "Ion mode"))
 ```
 
 ## Creating metaboset objects
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-POS_modes <- construct_metabosets(exprs = POS_data$exprs, pheno_data = POS_data$pheno_data, feature_data = POS_data$feature_data, group_col = "Group")
+POS_modes <- construct_metabosets(exprs = POS_data$exprs,
+                                  pheno_data = POS_data$pheno_data,
+                                  feature_data = POS_data$feature_data,
+                                  group_col = "Group")
 ```
 
 ## Extracting each mode in a single object
@@ -94,8 +101,10 @@ POS_corr_pca + POS_corr_sambx
 
 This step helps us reduce the number of features of the same molecule that were split due to ionization problems or unexpected behavior.
 
-```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
-POS_clusteredQC <- cluster_features(POS_corrected, rt_window = 1/60, all_features = T, corr_thresh = 0.9, d_thresh = 0.8 )
+```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide', cache=TRUE}
+POS_clusteredQC <- cluster_features(POS_corrected, 
+                                    rt_window = 1/60, all_features = T, 
+                                    corr_thresh = 0.9, d_thresh = 0.8 )
 POS_compressedQC <- compress_clusters(POS_clusteredQC)
 ```
 
@@ -159,7 +168,7 @@ POS_loadings <- POS_pca_noQC$rotation %>%   # Extract loadings
 Creating a table with Feature name and Compound column
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-POS_feat_name <- readxl::read_excel("POS_Metabolites.xlsx", 1)
+POS_feat_name <- readxl::read_excel("Data/POS_Metabolites.xlsx", 1)
 
 # Creating a new small table of the annotated compounds
 POS_compouds_all <- left_join(POS_feat_name, POS_loadings)
@@ -183,7 +192,7 @@ ggplot(POS_loadings, aes(PC1, PC2)) +
 Loaded of identified metabolites abundance from Excel file.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
-met_hetmap <- readxl::read_excel("POS_Metabolites_Hetmap.xlsx", 3)
+met_hetmap <- readxl::read_excel("Data/POS_Metabolites_Hetmap.xlsx", 3)
 met_hetmap <- met_hetmap[order(met_hetmap$A1),]     # sorted by column
 row.names(met_hetmap) <- met_hetmap$X               # Named rows
 met_hetmap_m <- data.matrix(met_hetmap)             # DataFrame

@@ -17,7 +17,7 @@ usethis::git_vaccinate()
 
 The present document aims to record the procedure given for the statistical analysis of secondary metabolites present in the different growth stages of *Urospatha saggitifolia*. For each step a brief explanation, the code and graphics obtained are included.
 
-The workflow used is taken from the paper ["notame": Workflow for Non-Targeted LC–MS Metabolic Profiling](https://doi.org/10.3390/metabo10040135). Which offers a wide variety of functions to perform metabolomic profile analysis.
+The workflow used is taken from the paper ["notame": Workflow for Non-Targeted LC–MS Metabolic Profiling](https://doi.org/10.3390/metabo10040135). Which offers a wide variety of functions to perform untargeted metabolic profile analysis.
 
 ## Before to start
 
@@ -38,25 +38,33 @@ library(magrittr)
 library(tidyverse) 
 library(patchwork) 
 library(dplyr)
+library(here)
+library(gplots)
 ```
 
 Then, a log system was added to have a record of each process executed.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-ppath <- "C:/Users/F4ss0/Documents/Ikiam21062022/Tesis-Pablo-Corella/U_sagittifolia_tubers/"
-init_log(log_file = paste0(ppath, 'Result/LC-MS_Negative/log_LC-MS_Negative.txt'))
+ppath <- here()
+init_log(log_file = paste0(ppath, '/Result/LC-MS_Negative/log_LC-MS_Negative.txt'))
 ```
 
 Next, the feature list was imported using the read_from_excel function.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-NEG_data <- read_from_excel(file = paste0(ppath, "Data/NEG_feature_list.xlsx"), sheet = 1, corner_row = 4, corner_column = "D", split_by = c("Column", "Ion mode"))
+NEG_data <- read_from_excel(file = "Data/NEG_feature_list.xlsx",
+                            sheet = 1, corner_row = 4, 
+                            corner_column = "D",
+                            split_by = c("Column", "Ion mode"))
 ```
 
 Once the data was read, the next step was to create a MetaboSet in order to create a specific R object.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-NEG_modes <- construct_metabosets(exprs = NEG_data$exprs, pheno_data = NEG_data$pheno_data, feature_data = NEG_data$feature_data, group_col = "Group")
+NEG_modes <- construct_metabosets(exprs = NEG_data$exprs,
+                                  pheno_data = NEG_data$pheno_data,
+                                  feature_data = NEG_data$feature_data,
+                                  group_col = "Group")
 ```
 
 Finally, each mode was extracted in a single object.
@@ -109,8 +117,11 @@ NEG_corr_pca + NEG_corr_sambx
 
 Finally, a step to consider in preprocessing is feature cleastering. This step helps us reduce the number of features of the same molecule that were split due to ionization problems or unexpected behavior.
 
-```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
-NEG_clusteredQC <- cluster_features(NEG_corrected, rt_window = 1/60, all_features = T, corr_thresh = 0.9, d_thresh = 0.8)
+```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide', cache=TRUE}
+NEG_clusteredQC <- cluster_features(NEG_corrected, rt_window = 1/60, 
+                                    all_features = T,
+                                    corr_thresh = 0.9, 
+                                    d_thresh = 0.8)
 NEG_compressedQC <- compress_clusters(NEG_clusteredQC)
 ```
 
@@ -174,7 +185,7 @@ NEG_loadings <- NEG_pca_noQC$rotation %>%    # Extract loadings
 Creating an artificial table with Feature name and Compound column.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-NEG_feat_name <- readxl::read_excel("NEG_Metabolites.xlsx", 1)
+NEG_feat_name <- readxl::read_excel("Data/NEG_Metabolites.xlsx", 1)
 
 # Creating a new small table of the annotated compounds
 NEG_compouds_all <- left_join(NEG_feat_name, NEG_loadings)
@@ -198,7 +209,7 @@ ggplot(NEG_loadings, aes(PC1, PC2)) +
 Loaded of identified metabolites abundance from Excel file.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
-met_hetmap <- readxl::read_excel("NEG_Metabolites_Hetmap.xlsx", 3)
+met_hetmap <- readxl::read_excel("Data/NEG_Metabolites_Hetmap.xlsx", 3)
 met_hetmap <- met_hetmap[order(met_hetmap$A1),]     # sorted by column
 row.names(met_hetmap) <- met_hetmap$X               # Named rows
 met_hetmap_m <- data.matrix(met_hetmap)             # DataFrame

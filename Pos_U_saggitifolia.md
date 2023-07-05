@@ -3,47 +3,30 @@ LC-MS of *U.saggitifolia* in positive ionization mode
 Pablo Corella, Jefferson Pastuña
 2023-06-11
 
-- <a href="#workspace" id="toc-workspace">Workspace</a>
-  - <a href="#charging-necesary-libraries"
-    id="toc-charging-necesary-libraries">Charging necesary libraries</a>
-  - <a href="#creating-a-record" id="toc-creating-a-record">Creating a
-    record</a>
-  - <a href="#importing-data" id="toc-importing-data">Importing data</a>
-  - <a href="#creating-metaboset-objects"
-    id="toc-creating-metaboset-objects">Creating metaboset objects</a>
-  - <a href="#extracting-each-mode-in-a-single-object"
-    id="toc-extracting-each-mode-in-a-single-object">Extracting each mode in
-    a single object</a>
-  - <a href="#plotting-raw-data" id="toc-plotting-raw-data">Plotting raw
-    data</a>
-- <a href="#preprocessing" id="toc-preprocessing">Preprocessing</a>
-  - <a href="#changing-features-with-0-to-na"
-    id="toc-changing-features-with-0-to-na">Changing features with 0 to
-    NA.</a>
-  - <a href="#flagging-low-detection-rate-features"
-    id="toc-flagging-low-detection-rate-features">Flagging low detection
-    rate features</a>
-  - <a href="#drift-correction" id="toc-drift-correction">Drift
-    correction</a>
-  - <a href="#plotting-corrected-data"
-    id="toc-plotting-corrected-data">Plotting corrected data</a>
-  - <a href="#feature-clustering" id="toc-feature-clustering">Feature
-    clustering</a>
-  - <a href="#plotting-the-notame-pca-workflow"
-    id="toc-plotting-the-notame-pca-workflow">Plotting the notame PCA
-    workflow</a>
-- <a href="#second-pca-and-loading-plot"
-  id="toc-second-pca-and-loading-plot">Second PCA and loading plot</a>
-  - <a href="#preparing-data" id="toc-preparing-data">Preparing data</a>
-  - <a href="#plotting-pca-results" id="toc-plotting-pca-results">Plotting
-    PCA results</a>
-  - <a href="#plotting-loading-results"
-    id="toc-plotting-loading-results">Plotting loading results</a>
-- <a href="#heat-map-plot" id="toc-heat-map-plot">Heat map plot</a>
-  - <a href="#plotting-heat-map" id="toc-plotting-heat-map">Plotting Heat
-    map</a>
-  - <a href="#save-heatmap-plot" id="toc-save-heatmap-plot">Save Heatmap
-    plot</a>
+- [Workspace](#workspace)
+  - [Charging necesary libraries](#charging-necesary-libraries)
+  - [Creating a record](#creating-a-record)
+  - [Importing data](#importing-data)
+  - [Creating metaboset objects](#creating-metaboset-objects)
+  - [Extracting each mode in a single
+    object](#extracting-each-mode-in-a-single-object)
+  - [Plotting raw data](#plotting-raw-data)
+- [Preprocessing](#preprocessing)
+  - [Changing features with 0 to NA.](#changing-features-with-0-to-na)
+  - [Flagging low detection rate
+    features](#flagging-low-detection-rate-features)
+  - [Drift correction](#drift-correction)
+  - [Plotting corrected data](#plotting-corrected-data)
+  - [Feature clustering](#feature-clustering)
+  - [Plotting the notame PCA
+    workflow](#plotting-the-notame-pca-workflow)
+- [Second PCA and loading plot](#second-pca-and-loading-plot)
+  - [Preparing data](#preparing-data)
+  - [Plotting PCA results](#plotting-pca-results)
+  - [Plotting loading results](#plotting-loading-results)
+- [Heat map plot](#heat-map-plot)
+  - [Plotting Heat map](#plotting-heat-map)
+  - [Save Heatmap plot](#save-heatmap-plot)
 
 # Workspace
 
@@ -56,59 +39,66 @@ library(magrittr)
 library(tidyverse) 
 library(patchwork) 
 library(dplyr)
+library(here)
+library(gplots)
 ```
 
 ## Creating a record
 
 ``` r
-ppath <- "C:/Users/F4ss0/Documents/Ikiam21062022/Tesis-Pablo-Corella/U_sagittifolia_tubers/"
-init_log(log_file = paste0(ppath, 'Result/LC-MS_Positive/log_LC-MS_Positive.txt'))
+ppath <-here()
+init_log(log_file = paste0(ppath, '/Result/LC-MS_Positive/log_LC-MS_Positive.txt'))
 ```
 
-    ## INFO [2023-06-27 04:42:35] Starting logging
+    ## INFO [2023-07-04 12:26:35] Starting logging
 
 ## Importing data
 
 ``` r
-POS_data <- read_from_excel(file = paste0(ppath, "Data/POS_feature_list.xlsx"), sheet = 1, corner_row = 4, corner_column = "E", split_by = c("Column", "Ion mode"))
+POS_data <- read_from_excel(file =  "Data/POS_feature_list.xlsx", sheet = 1,
+                            corner_row = 4, corner_column = "E",
+                            split_by = c("Column", "Ion mode"))
 ```
 
-    ## INFO [2023-06-27 04:42:38] Corner detected correctly at row 4, column E
-    ## INFO [2023-06-27 04:42:38] 
+    ## INFO [2023-07-04 12:26:36] Corner detected correctly at row 4, column E
+    ## INFO [2023-07-04 12:26:36] 
     ## Extracting sample information from rows 1 to 4 and columns F to R
-    ## INFO [2023-06-27 04:42:38] Replacing spaces in sample information column names with underscores (_)
-    ## INFO [2023-06-27 04:42:38] Naming the last column of sample information "Datafile"
-    ## INFO [2023-06-27 04:42:38] 
+    ## INFO [2023-07-04 12:26:36] Replacing spaces in sample information column names with underscores (_)
+    ## INFO [2023-07-04 12:26:36] Naming the last column of sample information "Datafile"
+    ## INFO [2023-07-04 12:26:36] 
     ## Extracting feature information from rows 5 to 3550 and columns A to E
-    ## INFO [2023-06-27 04:42:38] Creating Split column from Column, Ion mode
-    ## INFO [2023-06-27 04:42:39] Feature_ID column not found, creating feature IDs
-    ## INFO [2023-06-27 04:42:39] Identified m/z column Mass and retention time column RT
-    ## INFO [2023-06-27 04:42:39] Creating feature IDs from Split, m/z and retention time
-    ## INFO [2023-06-27 04:42:39] Replacing dots (.) in feature information column names with underscores (_)
-    ## INFO [2023-06-27 04:42:39] 
+    ## INFO [2023-07-04 12:26:36] Creating Split column from Column, Ion mode
+    ## INFO [2023-07-04 12:26:36] Feature_ID column not found, creating feature IDs
+    ## INFO [2023-07-04 12:26:36] Identified m/z column Mass and retention time column RT
+    ## INFO [2023-07-04 12:26:36] Creating feature IDs from Split, m/z and retention time
+    ## INFO [2023-07-04 12:26:36] Replacing dots (.) in feature information column names with underscores (_)
+    ## INFO [2023-07-04 12:26:36] 
     ## Extracting feature abundances from rows 5 to 3550 and columns F to R
-    ## INFO [2023-06-27 04:42:39] 
+    ## INFO [2023-07-04 12:26:36] 
     ## Checking sample information
-    ## INFO [2023-06-27 04:42:39] QC column generated from rows containing 'QC'
-    ## INFO [2023-06-27 04:42:39] Sample ID autogenerated from injection orders and prefix ID_
-    ## INFO [2023-06-27 04:42:39] Checking that feature abundances only contain numeric values
-    ## INFO [2023-06-27 04:42:40] 
+    ## INFO [2023-07-04 12:26:36] QC column generated from rows containing 'QC'
+    ## INFO [2023-07-04 12:26:36] Sample ID autogenerated from injection orders and prefix ID_
+    ## INFO [2023-07-04 12:26:36] Checking that feature abundances only contain numeric values
+    ## INFO [2023-07-04 12:26:36] 
     ## Checking feature information
-    ## INFO [2023-06-27 04:42:40] Checking that feature IDs are unique and not stored as numbers
-    ## INFO [2023-06-27 04:42:40] Checking that m/z and retention time values are reasonable
+    ## INFO [2023-07-04 12:26:36] Checking that feature IDs are unique and not stored as numbers
+    ## INFO [2023-07-04 12:26:36] Checking that m/z and retention time values are reasonable
 
 ## Creating metaboset objects
 
 ``` r
-POS_modes <- construct_metabosets(exprs = POS_data$exprs, pheno_data = POS_data$pheno_data, feature_data = POS_data$feature_data, group_col = "Group")
+POS_modes <- construct_metabosets(exprs = POS_data$exprs,
+                                  pheno_data = POS_data$pheno_data,
+                                  feature_data = POS_data$feature_data,
+                                  group_col = "Group")
 ```
 
     ## Initializing the object(s) with unflagged features
-    ## INFO [2023-06-27 04:42:40] 
+    ## INFO [2023-07-04 12:26:36] 
     ## Checking feature information
-    ## INFO [2023-06-27 04:42:40] Checking that feature IDs are unique and not stored as numbers
-    ## INFO [2023-06-27 04:42:41] Checking that feature abundances only contain numeric values
-    ## INFO [2023-06-27 04:42:41] Setting row and column names of exprs based on feature and pheno data
+    ## INFO [2023-07-04 12:26:36] Checking that feature IDs are unique and not stored as numbers
+    ## INFO [2023-07-04 12:26:36] Checking that feature abundances only contain numeric values
+    ## INFO [2023-07-04 12:26:36] Setting row and column names of exprs based on feature and pheno data
 
 ## Extracting each mode in a single object
 
@@ -143,7 +133,7 @@ and 80% of sample groups will be flagged.
 POS_mode <- flag_detection(POS_mode, qc_limit = 0.75, group_limit = 0.80)
 ```
 
-    ## INFO [2023-06-27 04:42:50] 
+    ## INFO [2023-07-04 12:26:37] 
     ## 0% of features flagged for low detection rate
 
 ## Drift correction
@@ -152,16 +142,16 @@ POS_mode <- flag_detection(POS_mode, qc_limit = 0.75, group_limit = 0.80)
 POS_dc <- dc_cubic_spline(POS_mode)
 ```
 
-    ## INFO [2023-06-27 04:42:51] 
-    ## Starting drift correction at 2023-06-27 04:42:51
-    ## INFO [2023-06-27 04:43:25] Drift correction performed at 2023-06-27 04:43:25
+    ## INFO [2023-07-04 12:26:37] 
+    ## Starting drift correction at 2023-07-04 12:26:37
+    ## INFO [2023-07-04 12:26:39] Drift correction performed at 2023-07-04 12:26:39
 
 ``` r
 POS_corrected <- POS_dc$object
 POS_corrected <- flag_quality(POS_corrected)
 ```
 
-    ## INFO [2023-06-27 04:43:26] 
+    ## INFO [2023-07-04 12:26:39] 
     ## 17% of features flagged for low quality
 
 ## Plotting corrected data
@@ -180,7 +170,9 @@ This step helps us reduce the number of features of the same molecule
 that were split due to ionization problems or unexpected behavior.
 
 ``` r
-POS_clusteredQC <- cluster_features(POS_corrected, rt_window = 1/60, all_features = T, corr_thresh = 0.9, d_thresh = 0.8 )
+POS_clusteredQC <- cluster_features(POS_corrected, 
+                                    rt_window = 1/60, all_features = T, 
+                                    corr_thresh = 0.9, d_thresh = 0.8 )
 POS_compressedQC <- compress_clusters(POS_clusteredQC)
 ```
 
@@ -250,7 +242,7 @@ POS_loadings <- POS_pca_noQC$rotation %>%   # Extract loadings
 Creating a table with Feature name and Compound column
 
 ``` r
-POS_feat_name <- readxl::read_excel("POS_Metabolites.xlsx", 1)
+POS_feat_name <- readxl::read_excel("Data/POS_Metabolites.xlsx", 1)
 
 # Creating a new small table of the annotated compounds
 POS_compouds_all <- left_join(POS_feat_name, POS_loadings)
@@ -278,7 +270,7 @@ ggplot(POS_loadings, aes(PC1, PC2)) +
 Loaded of identified metabolites abundance from Excel file.
 
 ``` r
-met_hetmap <- readxl::read_excel("POS_Metabolites_Hetmap.xlsx", 3)
+met_hetmap <- readxl::read_excel("Data/POS_Metabolites_Hetmap.xlsx", 3)
 met_hetmap <- met_hetmap[order(met_hetmap$A1),]     # sorted by column
 row.names(met_hetmap) <- met_hetmap$X               # Named rows
 met_hetmap_m <- data.matrix(met_hetmap)             # DataFrame
@@ -327,52 +319,52 @@ Finish a record.
 finish_log()
 ```
 
-    ## INFO [2023-06-27 05:30:11] Finished analysis. Tue Jun 27 05:30:11 2023
+    ## INFO [2023-07-04 12:29:41] Finished analysis. Tue Jul  4 12:29:41 2023
     ## Session info:
     ## 
-    ## INFO [2023-06-27 05:30:11] R version 4.2.2 (2022-10-31 ucrt)
-    ## INFO [2023-06-27 05:30:11] Platform: x86_64-w64-mingw32/x64 (64-bit)
-    ## INFO [2023-06-27 05:30:11] Running under: Windows 10 x64 (build 19045)
-    ## INFO [2023-06-27 05:30:11] 
-    ## INFO [2023-06-27 05:30:11] Matrix products: default
-    ## INFO [2023-06-27 05:30:11] 
-    ## INFO [2023-06-27 05:30:11] locale:
-    ## INFO [2023-06-27 05:30:11] [1] LC_COLLATE=Spanish_Spain.utf8  LC_CTYPE=Spanish_Spain.utf8   
-    ## INFO [2023-06-27 05:30:11] [3] LC_MONETARY=Spanish_Spain.utf8 LC_NUMERIC=C                  
-    ## INFO [2023-06-27 05:30:11] [5] LC_TIME=Spanish_Spain.utf8    
-    ## INFO [2023-06-27 05:30:11] 
-    ## INFO [2023-06-27 05:30:11] attached base packages:
-    ## INFO [2023-06-27 05:30:11] [1] parallel  stats     graphics  grDevices utils     datasets  methods  
-    ## INFO [2023-06-27 05:30:11] [8] base     
-    ## INFO [2023-06-27 05:30:11] 
-    ## INFO [2023-06-27 05:30:11] other attached packages:
-    ## INFO [2023-06-27 05:30:11]  [1] gplots_3.1.3         patchwork_1.1.2.9000 lubridate_1.9.2     
-    ## INFO [2023-06-27 05:30:11]  [4] forcats_1.0.0        stringr_1.5.0        dplyr_1.1.0         
-    ## INFO [2023-06-27 05:30:11]  [7] purrr_1.0.1          readr_2.1.4          tidyr_1.3.0         
-    ## INFO [2023-06-27 05:30:11] [10] tibble_3.1.8         tidyverse_2.0.0.9000 doParallel_1.0.14   
-    ## INFO [2023-06-27 05:30:11] [13] iterators_1.0.14     foreach_1.5.2        notame_0.2.0        
-    ## INFO [2023-06-27 05:30:11] [16] magrittr_2.0.3       ggplot2_3.4.1.9000   futile.logger_1.4.3 
-    ## INFO [2023-06-27 05:30:11] [19] Biobase_2.58.0       BiocGenerics_0.44.0 
-    ## INFO [2023-06-27 05:30:11] 
-    ## INFO [2023-06-27 05:30:11] loaded via a namespace (and not attached):
-    ## INFO [2023-06-27 05:30:11]  [1] ggrepel_0.9.2.9999   Rcpp_1.0.10          gert_1.9.2          
-    ## INFO [2023-06-27 05:30:11]  [4] gtools_3.9.4         digest_0.6.31        utf8_1.2.3          
-    ## INFO [2023-06-27 05:30:11]  [7] cellranger_1.1.0     R6_2.5.1             futile.options_1.0.1
-    ## INFO [2023-06-27 05:30:11] [10] sys_3.4.1            evaluate_0.20        highr_0.10          
-    ## INFO [2023-06-27 05:30:11] [13] pillar_1.8.1         rlang_1.0.6          readxl_1.4.2.9000   
-    ## INFO [2023-06-27 05:30:11] [16] rstudioapi_0.14      rmarkdown_2.20       labeling_0.4.2      
-    ## INFO [2023-06-27 05:30:11] [19] igraph_1.4.1.9002    munsell_0.5.0        compiler_4.2.2      
-    ## INFO [2023-06-27 05:30:11] [22] xfun_0.37            pkgconfig_2.0.3      askpass_1.1         
-    ## INFO [2023-06-27 05:30:11] [25] pcaMethods_1.90.0    htmltools_0.5.4      openssl_2.0.5       
-    ## INFO [2023-06-27 05:30:11] [28] tidyselect_1.2.0     codetools_0.2-18     fansi_1.0.4         
-    ## INFO [2023-06-27 05:30:11] [31] viridisLite_0.4.1    tzdb_0.3.0           withr_2.5.0         
-    ## INFO [2023-06-27 05:30:11] [34] bitops_1.0-7         grid_4.2.2           gtable_0.3.1        
-    ## INFO [2023-06-27 05:30:11] [37] lifecycle_1.0.3      formatR_1.14         credentials_1.3.2   
-    ## INFO [2023-06-27 05:30:11] [40] scales_1.2.1         KernSmooth_2.23-20   zip_2.2.2           
-    ## INFO [2023-06-27 05:30:11] [43] cli_3.6.0            stringi_1.7.12       farver_2.1.1        
-    ## INFO [2023-06-27 05:30:11] [46] fs_1.6.1             ellipsis_0.3.2       generics_0.1.3      
-    ## INFO [2023-06-27 05:30:11] [49] vctrs_0.5.2          openxlsx_4.2.5.2     ggsci_3.0.0         
-    ## INFO [2023-06-27 05:30:11] [52] lambda.r_1.2.4       RColorBrewer_1.1-3   tools_4.2.2         
-    ## INFO [2023-06-27 05:30:11] [55] glue_1.6.2           hms_1.1.2            fastmap_1.1.0       
-    ## INFO [2023-06-27 05:30:11] [58] yaml_2.3.7           timechange_0.2.0     colorspace_2.1-0    
-    ## INFO [2023-06-27 05:30:11] [61] caTools_1.18.2       knitr_1.42           usethis_2.1.6
+    ## INFO [2023-07-04 12:29:41] R version 4.2.0 (2022-04-22)
+    ## INFO [2023-07-04 12:29:41] Platform: aarch64-apple-darwin20 (64-bit)
+    ## INFO [2023-07-04 12:29:41] Running under: macOS 13.4.1
+    ## INFO [2023-07-04 12:29:41] 
+    ## INFO [2023-07-04 12:29:41] Matrix products: default
+    ## INFO [2023-07-04 12:29:41] BLAS:   /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRblas.0.dylib
+    ## INFO [2023-07-04 12:29:41] LAPACK: /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRlapack.dylib
+    ## INFO [2023-07-04 12:29:41] 
+    ## INFO [2023-07-04 12:29:41] locale:
+    ## INFO [2023-07-04 12:29:41] [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+    ## INFO [2023-07-04 12:29:41] 
+    ## INFO [2023-07-04 12:29:41] attached base packages:
+    ## INFO [2023-07-04 12:29:41] [1] parallel  stats     graphics  grDevices utils     datasets  methods  
+    ## INFO [2023-07-04 12:29:41] [8] base     
+    ## INFO [2023-07-04 12:29:41] 
+    ## INFO [2023-07-04 12:29:41] other attached packages:
+    ## INFO [2023-07-04 12:29:41]  [1] gplots_3.1.3        here_1.0.1          patchwork_1.1.2    
+    ## INFO [2023-07-04 12:29:41]  [4] lubridate_1.9.2     forcats_1.0.0       stringr_1.5.0      
+    ## INFO [2023-07-04 12:29:41]  [7] dplyr_1.1.2         purrr_1.0.1         readr_2.1.4        
+    ## INFO [2023-07-04 12:29:41] [10] tidyr_1.3.0         tibble_3.2.1        tidyverse_2.0.0    
+    ## INFO [2023-07-04 12:29:41] [13] doParallel_1.0.17   iterators_1.0.14    foreach_1.5.2      
+    ## INFO [2023-07-04 12:29:41] [16] notame_0.2.1        magrittr_2.0.3      ggplot2_3.4.2      
+    ## INFO [2023-07-04 12:29:41] [19] futile.logger_1.4.3 Biobase_2.58.0      BiocGenerics_0.44.0
+    ## INFO [2023-07-04 12:29:41] 
+    ## INFO [2023-07-04 12:29:41] loaded via a namespace (and not attached):
+    ## INFO [2023-07-04 12:29:41]  [1] viridisLite_0.4.2    gtools_3.9.4         askpass_1.1         
+    ## INFO [2023-07-04 12:29:41]  [4] highr_0.10           cellranger_1.1.0     yaml_2.3.7          
+    ## INFO [2023-07-04 12:29:41]  [7] ggrepel_0.9.3        pillar_1.9.0         glue_1.6.2          
+    ## INFO [2023-07-04 12:29:41] [10] digest_0.6.31        RColorBrewer_1.1-3   colorspace_2.1-0    
+    ## INFO [2023-07-04 12:29:41] [13] htmltools_0.5.5      pkgconfig_2.0.3      scales_1.2.1        
+    ## INFO [2023-07-04 12:29:41] [16] openxlsx_4.2.5.2     tzdb_0.4.0           timechange_0.2.0    
+    ## INFO [2023-07-04 12:29:41] [19] openssl_2.0.6        generics_0.1.3       farver_2.1.1        
+    ## INFO [2023-07-04 12:29:41] [22] usethis_2.2.1        withr_2.5.0          credentials_1.3.2   
+    ## INFO [2023-07-04 12:29:41] [25] cli_3.6.1            readxl_1.4.2         evaluate_0.21       
+    ## INFO [2023-07-04 12:29:41] [28] fs_1.6.2             fansi_1.0.4          tools_4.2.0         
+    ## INFO [2023-07-04 12:29:41] [31] hms_1.1.3            formatR_1.14         lifecycle_1.0.3     
+    ## INFO [2023-07-04 12:29:41] [34] gert_1.9.2           munsell_0.5.0        ggsci_3.0.0         
+    ## INFO [2023-07-04 12:29:41] [37] zip_2.3.0            lambda.r_1.2.4       pcaMethods_1.90.0   
+    ## INFO [2023-07-04 12:29:41] [40] compiler_4.2.0       caTools_1.18.2       rlang_1.1.1         
+    ## INFO [2023-07-04 12:29:41] [43] grid_4.2.0           rstudioapi_0.14      sys_3.4.2           
+    ## INFO [2023-07-04 12:29:41] [46] igraph_1.5.0         bitops_1.0-7         labeling_0.4.2      
+    ## INFO [2023-07-04 12:29:41] [49] rmarkdown_2.23       gtable_0.3.3         codetools_0.2-19    
+    ## INFO [2023-07-04 12:29:41] [52] R6_2.5.1             knitr_1.43           fastmap_1.1.1       
+    ## INFO [2023-07-04 12:29:41] [55] utf8_1.2.3           rprojroot_2.0.3      futile.options_1.0.1
+    ## INFO [2023-07-04 12:29:41] [58] KernSmooth_2.23-21   stringi_1.7.12       Rcpp_1.0.10         
+    ## INFO [2023-07-04 12:29:41] [61] vctrs_0.6.3          tidyselect_1.2.0     xfun_0.39
