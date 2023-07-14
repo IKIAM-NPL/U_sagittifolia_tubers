@@ -2,6 +2,14 @@ library(ggsci)
 library(gridExtra)
 library(ggpubr)
 library(cowplot)
+library(readxl)
+library(tidyverse)
+library(ComplexHeatmap)
+library(viridis)
+library(gplots)
+# Figure size according to ASC
+# https://pubs.acs.org/page/4authors/submission/graphics_prep.html
+
 ### Figure 1 -------
 
 # Pos Scores
@@ -191,3 +199,87 @@ figure_2 <- ggpubr::as_ggplot(Figure2) +
 
 ggsave(filename = "Plots/jpeg/Figure_2.jpeg", plot = figure_2,
        width = 3.25, height = 4, units = "in", dpi = 300, scale = 2)
+
+#HeatMap plot
+# https://jokergoo.github.io/ComplexHeatmap-reference/book/
+set.seed(2023)
+neg_heatmap_dt <- read_excel("Data/NEG_Metabolites_Hetmap.xlsx",
+                             sheet = "To-ComplexHeatmap")
+
+# Total phenol level
+top_info <- data.frame(`Growth stage` = c( rep("Seedling", 3), 
+                                       rep("Juvenile", 3), 
+                                       rep("Adult", 3)) ) 
+rownames(top_info) <- paste(top_info$Growth.stage, rep(c(1, 2, 3), 3))
+top_info <- as.matrix(top_info)
+
+cols_growth <- c(Seedling = "#CC0C00FF", Juvenile = "#5C88DAFF", Adult = "#84BD00FF")
+top_info_ann <- HeatmapAnnotation(`Growth stage` = top_info,
+                                  col = list(`Growth stage` = cols_growth),
+                                  show_annotation_name = T,show_legend=F, 
+                                  border = TRUE)
+
+# Creating metabolite class
+metabolite_class <- neg_heatmap_dt %>% 
+  select(Classification, Metabolite)
+# pal_uchicago("default")(9)
+cols_metClass <- c("Phenolic acid" = "#800000FF",  "Phenol" = "#767676FF",
+                   "Saccharide" = "#FFA319FF", "Flavonoid" = "#8A9045FF",
+                   "Nucleosides" = "#155F83FF",  "Organic acid" = "#C16622FF",
+                   "Amino acid and derivatives" = "#725663FF",
+                   "Pyridines" = "#58593FFF")
+  
+met_class_annotation <-  metabolite_class %>% select(Classification) %>% 
+  as.matrix()
+rownames(met_class_annotation) <- metabolite_class$Metabolite
+row_annot <- rowAnnotation(Metabolite = met_class_annotation,
+                           col = list(Metabolite = cols_metClass),
+                           show_annotation_name = T,show_legend=F)
+
+mycol <-colorRamp2(c(2, 4.5, 7), c("blue", "white", "#FF5A5A"))
+neg_hm_mp <- neg_heatmap_dt[, 2:10] %>% as.matrix %>% log10()
+rownames(neg_hm_mp) <- neg_heatmap_dt$Metabolite
+
+neg_heatmap <- Heatmap(neg_hm_mp, col = mycol,
+                       border_gp = grid::gpar(col = "black", lty = 1),
+                       rect_gp = grid::gpar(col = "black", lwd = 0.75),
+                       clustering_distance_columns = "euclidean",
+                       clustering_method_columns = "complete",
+                       right_annotation = row_annot, 
+                       top_annotation = top_info_ann, 
+                       show_heatmap_legend = F,
+                       row_km = 3, column_km = 2)
+neg_heatmap
+
+# Legend  log10 Abundance
+lgd1 <- Legend(col_fun = mycol,
+               title = "log10(Abundance)",
+               at = seq(7), #legend_width = unit(6, "cm"), 
+               direction = "horizontal" )
+
+# Legend Growth stage
+lgd2 <- Legend(labels = c("Seedling", "Juvenile", "Adult"),
+               legend_gp = gpar(fill = cols_growth), title = "Growth stage")
+
+# Legend metabolite class
+lgd3 <- Legend(labels = unique(metabolite_class$Classification),
+               legend_gp = gpar(fill = cols_metClass), 
+               title = "Metabolite\nClassification", ncol = 3)
+
+# Converting to ggplot
+gg_heatmap <- grid.grabExpr(draw(neg_heatmap))
+gg_heatmap <- ggpubr::as_ggplot(gg_heatmap)
+gg_heatmap
+
+
+all_legends <- packLegend(lgd1, lgd2, lgd3, direction = "horizontal")
+gg_legend <- grid.grabExpr(draw(all_legends))
+gg_legend_fn <- ggpubr::as_ggplot(gg_legend)
+
+heatmap_neg_ggplot <- cowplot::plot_grid(gg_legend_fn, gg_heatmap,
+                                         nrow = 2, rel_heights = c(1,5))
+heatmap_neg_ggplot
+ggsave(filename = "Plots/jpeg/Fig3_pos.jpeg", plot = heatmap_neg_ggplot,
+      width = 3.25, height = 5, units = "in", dpi = 600, scale = 2)
+
+
