@@ -7,8 +7,10 @@ library(tidyverse)
 library(ComplexHeatmap)
 library(viridis)
 library(gplots)
+library(ggbeeswarm)
 # Figure size according to ASC
 # https://pubs.acs.org/page/4authors/submission/graphics_prep.html
+
 
 ### Figure 1 -------
 
