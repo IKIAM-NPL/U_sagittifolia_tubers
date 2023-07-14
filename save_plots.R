@@ -8,6 +8,7 @@ library(ComplexHeatmap)
 library(viridis)
 library(gplots)
 library(ggbeeswarm)
+library(circlize)
 # Figure size according to ASC
 # https://pubs.acs.org/page/4authors/submission/graphics_prep.html
 
@@ -225,15 +226,16 @@ top_info_ann <- HeatmapAnnotation(`Growth stage` = top_info,
 metabolite_class <- neg_heatmap_dt %>% 
   select(Classification, Metabolite)
 # pal_uchicago("default")(9)
-cols_metClass <- c("Phenolic acid" = "#800000FF",  "Phenol" = "#767676FF",
+cols_metClass <- c("Lipid" = "#800000FF",  "Phenolic" = "#767676FF",
                    "Saccharide" = "#FFA319FF", "Flavonoid" = "#8A9045FF",
-                   "Nucleosides" = "#155F83FF",  "Organic acid" = "#C16622FF",
+                   "Nucleoside" = "#155F83FF",  "Organic acid" = "#C16622FF",
                    "Amino acid and derivatives" = "#725663FF",
-                   "Pyridines" = "#58593FFF")
+                   "Pyridine and derivatives" = "#58593FFF")
   
 met_class_annotation <-  metabolite_class %>% select(Classification) %>% 
   as.matrix()
 rownames(met_class_annotation) <- metabolite_class$Metabolite
+
 row_annot <- rowAnnotation(Metabolite = met_class_annotation,
                            col = list(Metabolite = cols_metClass),
                            show_annotation_name = T,show_legend=F)
@@ -253,6 +255,44 @@ neg_heatmap <- Heatmap(neg_hm_mp, col = mycol,
                        row_km = 3, column_km = 2)
 neg_heatmap
 
+
+
+# Pos heatmap 
+pos_heatmap_dt <- read_xlsx("Data/POS_Metabolites_Hetmap.xlsx",
+                            sheet = "To-ComplexHeatmap")
+
+pos_hm_mp <- pos_heatmap_dt[, 2:10] %>% as.matrix %>% log10()
+rownames(pos_hm_mp) <- pos_heatmap_dt$Metabolite
+
+pos_metab_class <- pos_heatmap_dt %>% select(Classification) %>% 
+  as.matrix()
+rownames(pos_metab_class) <- pos_heatmap_dt$Metabolite
+
+
+cols_metClass_pos <- c("Lipid" = "#800000FF",  "Phenolic" = "#767676FF",
+                       "Saccharide" = "#FFA319FF", "Flavonoid" = "#8A9045FF",
+                       "Nucleoside" = "#155F83FF",  "Organic acid" = "#C16622FF",
+                       "Amino acid and derivatives" = "#725663FF",
+                       "Pyridine and derivatives" = "#58593FFF",
+                       "Alkaloid" = "#3e0b5e")
+
+pos_row_ann <- rowAnnotation(Metabolite = pos_metab_class,
+                            col = list(Metabolite = cols_metClass_pos),
+                            show_annotation_name = T,show_legend=F)
+
+
+
+pos_heatmap <- Heatmap(pos_hm_mp, col = mycol,
+                       border_gp = grid::gpar(col = "black", lty = 1),
+                       rect_gp = grid::gpar(col = "black", lwd = 0.75),
+                       clustering_distance_columns = "euclidean",
+                       clustering_method_columns = "complete",
+                       top_annotation = top_info_ann, 
+                       right_annotation = pos_row_ann,
+                       show_heatmap_legend = F,
+                       row_km = 3, column_km = 2 )
+pos_heatmap
+
 # Legend  log10 Abundance
 lgd1 <- Legend(col_fun = mycol,
                title = "log10(Abundance)",
@@ -264,24 +304,38 @@ lgd2 <- Legend(labels = c("Seedling", "Juvenile", "Adult"),
                legend_gp = gpar(fill = cols_growth), title = "Growth stage")
 
 # Legend metabolite class
-lgd3 <- Legend(labels = unique(metabolite_class$Classification),
-               legend_gp = gpar(fill = cols_metClass), 
+lgd3 <- Legend(labels = c(unique(metabolite_class$Classification),"Alkaloid") ,
+               legend_gp = gpar(fill = cols_metClass_pos), 
                title = "Metabolite\nClassification", ncol = 3)
 
 # Converting to ggplot
+# Neg heatmap
 gg_heatmap <- grid.grabExpr(draw(neg_heatmap))
 gg_heatmap <- ggpubr::as_ggplot(gg_heatmap)
 gg_heatmap
+
+# Pos heatmap
+gg_heatmap_pos <- grid.grabExpr(draw(pos_heatmap))
+gg_heatmap_pos <- ggpubr::as_ggplot(gg_heatmap_pos)
+gg_heatmap_pos
 
 
 all_legends <- packLegend(lgd1, lgd2, lgd3, direction = "horizontal")
 gg_legend <- grid.grabExpr(draw(all_legends))
 gg_legend_fn <- ggpubr::as_ggplot(gg_legend)
 
-heatmap_neg_ggplot <- cowplot::plot_grid(gg_legend_fn, gg_heatmap,
-                                         nrow = 2, rel_heights = c(1,5))
-heatmap_neg_ggplot
-ggsave(filename = "Plots/jpeg/Fig3_pos.jpeg", plot = heatmap_neg_ggplot,
-      width = 3.25, height = 5, units = "in", dpi = 600, scale = 2)
+
+buttom_heatmaps <- cowplot::plot_grid(gg_heatmap, gg_heatmap_pos,
+                                      labels = c('A', "B"), nrow = 1,
+                                      rel_widths = c(0.5, 0.45))
+buttom_heatmaps
+
+heatmaps_plot <- plot_grid(gg_legend_fn, buttom_heatmaps, ncol = 1,
+                           rel_heights = c(0.12, 0.88))
+
+heatmaps_plot
+
+ggsave(filename = "Plots/jpeg/heatmaps.jpeg", plot = heatmaps_plot,
+      width = 7.5, height = 6, units = "in", dpi = 600, scale = 1.7)
 
 
