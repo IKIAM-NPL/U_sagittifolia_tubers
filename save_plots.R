@@ -323,7 +323,7 @@ gg_legend_fn <- ggpubr::as_ggplot(gg_legend)
 
 
 buttom_heatmaps <- cowplot::plot_grid(gg_heatmap, gg_heatmap_pos,
-                                      labels = c('A ([M-H]-)', "B ([M+H]+)"),
+                                      labels = c('A [M-H]-', "B [M+H]+"),
                                       nrow = 1,
                                       rel_widths = c(0.5, 0.45), 
                                       label_x = c(0, 0), 
@@ -339,3 +339,5 @@ ggsave(filename = "Plots/jpeg/heatmaps.jpeg", plot = heatmaps_plot,
       width = 7.5, height = 6, units = "in", dpi = 600, scale = 1.7)
 
 
+ggsave(filename = "Plots/jpeg/heatmaps.pdf", plot = heatmaps_plot,
+       width = 7.5, height = 6, units = "in", dpi = 600, scale = 1.7)
