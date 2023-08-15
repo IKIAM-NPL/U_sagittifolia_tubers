@@ -41,4 +41,4 @@ metabolome</figcaption>
 Heatmap of the annotated features in postive and negative polarity of
 the LC-MS/MS data.
 
-![](Plots/jpeg/heatmaps.jpeg)
+![](Plots/jpeg/heatmaps_AI.jpg)
