@@ -233,7 +233,8 @@ cols_metClass <- c("Phenylpropanoids and polyketides" = "#800000FF",
                    "Organic acids and derivatives" = "#155F83FF",
                    "Benzenoids" = "#C16622FF",
                    "Organoheterocyclic compounds" = "#725663FF",
-                   "Lignans, neolignans and related compounds" = "#58593FFF")
+                   "Lignans, neolignans and related compounds" = "#58593FFF",
+                   "Alkaloids and derivatives" = "#9c7c46")
   
 met_class_annotation <-  metabolite_class %>% select(Classification) %>% 
   as.matrix()
@@ -267,20 +268,13 @@ pos_heatmap_dt <- read_xlsx("Data/POS_Metabolites_Hetmap.xlsx",
 pos_hm_mp <- pos_heatmap_dt[, 2:10] %>% as.matrix %>% log10()
 rownames(pos_hm_mp) <- pos_heatmap_dt$Metabolite
 
-pos_metab_class <- pos_heatmap_dt %>% select(Classification) %>% 
+pos_metab_class <- pos_heatmap_dt %>% select(Classification = Superclass) %>% 
   as.matrix()
 rownames(pos_metab_class) <- pos_heatmap_dt$Metabolite
 
 
-cols_metClass_pos <- c("Phenolic" = "#800000FF",  "Lipid" = "#767676FF",
-                       "Saccharide" = "#FFA319FF", "Flavonoid" = "#8A9045FF",
-                       "Nucleoside" = "#155F83FF",  "Organic acid" = "#C16622FF",
-                       "Amino acid and derivatives" = "#725663FF",
-                       "Pyridine and derivatives" = "#58593FFF",
-                       "Alkaloid" = "#3e0b5e")
-
 pos_row_ann <- rowAnnotation(Metabolite = pos_metab_class,
-                            col = list(Metabolite = cols_metClass_pos),
+                            col = list(Metabolite = cols_metClass),
                             show_annotation_name = T,show_legend=F)
 
 
@@ -308,7 +302,7 @@ lgd2 <- Legend(labels = c("Seedling", "Juvenile", "Adult"),
 
 # Legend metabolite class
 lgd3 <- Legend(labels = c(unique(metabolite_class$Classification),"Alkaloid") ,
-               legend_gp = gpar(fill = cols_metClass_pos), 
+               legend_gp = gpar(fill = cols_metClass), 
                title = "Metabolite\nClassification", ncol = 3)
 
 # Converting to ggplot
