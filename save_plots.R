@@ -224,13 +224,16 @@ top_info_ann <- HeatmapAnnotation(`Growth stage` = top_info,
 
 # Creating metabolite class
 metabolite_class <- neg_heatmap_dt %>% 
-  select(Classification, Metabolite)
+  select(Classification = Superclass, Metabolite)
 # pal_uchicago("default")(9)
-cols_metClass <- c("Lipid" = "#800000FF",  "Phenolic" = "#767676FF",
-                   "Saccharide" = "#FFA319FF", "Flavonoid" = "#8A9045FF",
-                   "Nucleoside" = "#155F83FF",  "Organic acid" = "#C16622FF",
-                   "Amino acid and derivatives" = "#725663FF",
-                   "Pyridine and derivatives" = "#58593FFF")
+cols_metClass <- c("Phenylpropanoids and polyketides" = "#800000FF",
+                   "Organic oxygen compounds" = "#767676FF",
+                   "Lipids and lipid-like molecules" = "#FFA319FF",
+                   "Nucleosides, nucleotides, and analogues" = "#8A9045FF",
+                   "Organic acids and derivatives" = "#155F83FF",
+                   "Benzenoids" = "#C16622FF",
+                   "Organoheterocyclic compounds" = "#725663FF",
+                   "Lignans, neolignans and related compounds" = "#58593FFF")
   
 met_class_annotation <-  metabolite_class %>% select(Classification) %>% 
   as.matrix()
@@ -269,7 +272,7 @@ pos_metab_class <- pos_heatmap_dt %>% select(Classification) %>%
 rownames(pos_metab_class) <- pos_heatmap_dt$Metabolite
 
 
-cols_metClass_pos <- c("Lipid" = "#800000FF",  "Phenolic" = "#767676FF",
+cols_metClass_pos <- c("Phenolic" = "#800000FF",  "Lipid" = "#767676FF",
                        "Saccharide" = "#FFA319FF", "Flavonoid" = "#8A9045FF",
                        "Nucleoside" = "#155F83FF",  "Organic acid" = "#C16622FF",
                        "Amino acid and derivatives" = "#725663FF",
