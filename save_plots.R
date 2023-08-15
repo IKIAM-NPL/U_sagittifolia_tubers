@@ -303,7 +303,7 @@ lgd2 <- Legend(labels = c("Seedling", "Juvenile", "Adult"),
 # Legend metabolite class
 lgd3 <- Legend(labels = c(unique(metabolite_class$Classification),"Alkaloid") ,
                legend_gp = gpar(fill = cols_metClass), 
-               title = "Metabolite\nClassification", ncol = 3)
+               title = "Metabolite Classification", ncol = 3)
 
 # Converting to ggplot
 # Neg heatmap
