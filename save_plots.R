@@ -129,10 +129,9 @@ Figure1 <- arrangeGrob(scores_post_plt, scores_neg_plt,
                        pos_loadings_plt, NEG_loadings_plt,
                       layout_matrix =rbind(c(1,   2),
                                            c(1,  2),
-                                           c(1,  2),
                                            rep(3, 2),
                                            rep(3, 2),
-                                           rep(3, 2),
+                                           rep(4, 2),
                                            rep(4, 2),
                                            rep(4, 2),
                                            rep(4, 2)))
@@ -140,10 +139,15 @@ Figure1 <- arrangeGrob(scores_post_plt, scores_neg_plt,
 figure_1 <- ggpubr::as_ggplot(Figure1) +
   draw_plot_label(label = LETTERS[1:4],
                   x = c(0, 0.5, 0, 0),
-                  y = c(1, 1, .67, 0.35))
+                  y = c(.99, .99, .75, 0.50))
 
 
+# JPEG
 ggsave(filename = "Plots/jpeg/Figure_1.jpeg", plot = figure_1,
+       width = 140, height = 180, units = "mm", dpi = 300, scale = 2.15)
+
+# PDF
+ggsave(filename = "Plots/pdf/Figure_1.pdf", plot = figure_1,
       width = 140, height = 180, units = "mm", dpi = 300, scale = 2.5)
 
 

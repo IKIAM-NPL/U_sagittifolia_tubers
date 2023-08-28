@@ -8,9 +8,9 @@ The present document aims to record the procedure given for the statistical anal
 
 # Analysis Notebooks
 
--   [LC-MS Neg polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Neg_U_saggitifolia.md)
--   [LC-MS Pos polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Pos_U_saggitifolia.md)
--   [GC-EI-MS](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/EI_U_saggitifolia.md)
+-   [LC-MS Neg polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Notebooks/Neg_U_saggitifolia.md)
+-   [LC-MS Pos polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Notebooks/Pos_U_saggitifolia.md)
+-   [GC-EI-MS](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Notebooks/EI_U_saggitifolia.md)
 
 # Useful results
 
