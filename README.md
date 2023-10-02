@@ -9,10 +9,10 @@ explanation, the code and graphics obtained are included.
 # Analysis Notebooks
 
 - [LC-MS Neg
-  polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Notebooks/Neg_U_saggitifolia.md)
+  polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Noteboks/Neg_U_saggitifolia.md)
 - [LC-MS Pos
-  polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Notebooks/Pos_U_saggitifolia.md)
-- [GC-EI-MS](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Notebooks/EI_U_saggitifolia.md)
+  polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Noteboks/Pos_U_saggitifolia.md)
+- [GC-EI-MS](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Noteboks/EI_U_saggitifolia.md)
 
 # Useful results
 
@@ -30,7 +30,7 @@ negative (B and D) polarity</figcaption>
 - GC-(Q)MS
 
 <figure>
-<img src="Plots/jpeg/Figure_2.jpeg"
+<img src="Plots/jpeg/Figure_3.jpeg"
 alt="PCA analysis of the volatile metabolome" />
 <figcaption aria-hidden="true">PCA analysis of the volatile
 metabolome</figcaption>

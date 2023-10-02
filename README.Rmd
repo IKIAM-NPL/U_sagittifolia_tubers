@@ -8,9 +8,9 @@ The present document aims to record the procedure given for the statistical anal
 
 # Analysis Notebooks
 
--   [LC-MS Neg polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Notebooks/Neg_U_saggitifolia.md)
--   [LC-MS Pos polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Notebooks/Pos_U_saggitifolia.md)
--   [GC-EI-MS](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Notebooks/EI_U_saggitifolia.md)
+-   [LC-MS Neg polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Noteboks/Neg_U_saggitifolia.md)
+-   [LC-MS Pos polarity](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Noteboks/Pos_U_saggitifolia.md)
+-   [GC-EI-MS](https://github.com/IKIAM-NPL/U_sagittifolia_tubers/blob/main/Noteboks/EI_U_saggitifolia.md)
 
 # Useful results
 
@@ -22,7 +22,7 @@ The present document aims to record the procedure given for the statistical anal
 
 -   GC-(Q)MS
 
-![PCA analysis of the volatile metabolome](Plots/jpeg/Figure_2.jpeg)
+![PCA analysis of the volatile metabolome](Plots/jpeg/Figure_3.jpeg)
 
 ## Heatmaps and HCA
 
