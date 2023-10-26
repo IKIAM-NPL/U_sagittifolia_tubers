@@ -30,7 +30,7 @@ POS_scores <- POS_scores %>% mutate(Group =
 scores_post_plt <- ggplot(POS_scores, 
                           aes(PC1, PC2, shape = Group, color = Group)) +
   geom_point(size = 5) +
-  guides(x=guide_axis(title = "PC 1 (43%)"),
+  guides(x=guide_axis(title = "PC 1 (41%)"),
          y=guide_axis(title = "PC 2 (20%)")) +
   labs(color = "Growth stage", shape = "Growth stage") +
   ggsci::scale_color_startrek() +
@@ -252,6 +252,9 @@ mycol <-colorRamp2(c(2, 4.5, 7), c("blue", "white", "#FF5A5A"))
 neg_hm_mp <- neg_heatmap_dt[, 2:10] %>% as.matrix %>% log10()
 rownames(neg_hm_mp) <- neg_heatmap_dt$Metabolite
 
+# Scaling for 
+
+
 neg_heatmap <- Heatmap(neg_hm_mp, col = mycol,
                        border_gp = grid::gpar(col = "black", lty = 1),
                        rect_gp = grid::gpar(col = "black", lwd = 0.75),
@@ -343,5 +346,5 @@ ggsave(filename = "Plots/jpeg/heatmaps.jpeg", plot = heatmaps_plot,
       width = 7.5, height = 6, units = "in", dpi = 600, scale = 1.7)
 
 
-ggsave(filename = "Plots/jpeg/heatmaps.pdf", plot = heatmaps_plot,
+ggsave(filename = "Plots/pdf/heatmaps.pdf", plot = heatmaps_plot,
        width = 7.5, height = 6, units = "in", dpi = 600, scale = 1.7)

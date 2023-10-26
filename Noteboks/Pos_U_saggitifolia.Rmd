@@ -30,14 +30,14 @@ library(gplots)
 ## Creating a record
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-ppath <-here()
-init_log(log_file = paste0(ppath, '/Result/LC-MS_Positive/log_LC-MS_Positive.txt'))
+
+init_log(log_file = '../Result/LC-MS_Positive/log_LC-MS_Positive.txt')
 ```
 
 ## Importing data
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-POS_data <- read_from_excel(file =  "Data/POS_feature_list.xlsx", sheet = 1,
+POS_data <- read_from_excel(file =  "../Data/POS_feature_list.xlsx", sheet = 1,
                             corner_row = 4, corner_column = "E",
                             split_by = c("Column", "Ion mode"))
 ```
@@ -151,7 +151,7 @@ POS_scores <- POS_pca_noQC$x %>%         # Get PC coordinates
 
 ggplot(POS_scores, aes(PC1, PC2, shape = Group, color = Group)) +
   geom_point(size = 3) +
-  guides(x=guide_axis(title = "PC 1 (43%)"), y=guide_axis(title = "PC 2 (20%)")) +
+  guides(x=guide_axis(title = "PC 1 (41%)"), y=guide_axis(title = "PC 2 (20%)")) +
   theme_classic()
 
 # Save plot
@@ -168,7 +168,7 @@ POS_loadings <- POS_pca_noQC$rotation %>%   # Extract loadings
 Creating a table with Feature name and Compound column
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-POS_feat_name <- readxl::read_excel("Data/POS_Metabolites.xlsx", 1)
+POS_feat_name <- readxl::read_excel("../Data/POS_Metabolites.xlsx", 1)
 
 # Creating a new small table of the annotated compounds
 POS_compouds_all <- left_join(POS_feat_name, POS_loadings)

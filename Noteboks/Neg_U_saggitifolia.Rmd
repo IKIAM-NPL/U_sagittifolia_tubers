@@ -45,14 +45,14 @@ library(gplots)
 Then, a log system was added to have a record of each process executed.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-ppath <- here()
-init_log(log_file = paste0(ppath, '/Result/LC-MS_Negative/log_LC-MS_Negative.txt'))
+
+init_log(log_file = '../Result/LC-MS_Negative/log_LC-MS_Negative.txt')
 ```
 
 Next, the feature list was imported using the read_from_excel function.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-NEG_data <- read_from_excel(file = "Data/NEG_feature_list.xlsx",
+NEG_data <- read_from_excel(file = "../Data/NEG_feature_list.xlsx",
                             sheet = 1, corner_row = 4, 
                             corner_column = "D",
                             split_by = c("Column", "Ion mode"))
@@ -185,7 +185,7 @@ NEG_loadings <- NEG_pca_noQC$rotation %>%    # Extract loadings
 Creating an artificial table with Feature name and Compound column.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-NEG_feat_name <- readxl::read_excel("Data/NEG_Metabolites.xlsx", 1)
+NEG_feat_name <- readxl::read_excel("../Data/NEG_Metabolites.xlsx", 1)
 
 # Creating a new small table of the annotated compounds
 NEG_compouds_all <- left_join(NEG_feat_name, NEG_loadings)
