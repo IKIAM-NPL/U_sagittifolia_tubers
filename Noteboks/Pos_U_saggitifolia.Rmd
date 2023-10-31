@@ -192,7 +192,7 @@ ggplot(POS_loadings, aes(PC1, PC2)) +
 Loaded of identified metabolites abundance from Excel file.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
-met_hetmap <- readxl::read_excel("Data/POS_Metabolites_Hetmap.xlsx", 3)
+met_hetmap <- readxl::read_excel("../Data/POS_Metabolites_Hetmap.xlsx", 3)
 met_hetmap <- met_hetmap[order(met_hetmap$A1),]     # sorted by column
 row.names(met_hetmap) <- met_hetmap$X               # Named rows
 met_hetmap_m <- data.matrix(met_hetmap)             # DataFrame
@@ -228,7 +228,7 @@ heatmap.2(y,  Rowv = as.dendrogram(hr),  Colv = as.dendrogram(hc),  col = mycol,
 ## Save Heatmap plot
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
-png(filename ="Result/LC-MS_Positive/LC_MS2_Pos_HeatMap.png", width = 10, height = 6, units = "in", pointsize = 12, res=300)
+png(filename ="../Result/LC-MS_Positive/LC_MS2_Pos_HeatMap.png", width = 10, height = 6, units = "in", pointsize = 12, res=300)
 heatmap.2(y, Rowv = as.dendrogram(hr), Colv = as.dendrogram(hc), col = mycol, density.info = "none", trace = "none", dendrogram = "both", scale = "row", labRow = NULL, labCol = NULL, margins = c(4, 12), key = TRUE, keysize = 0.7, key.xlab = NA, key.ylab = NA)
 dev.off() 
 ```
