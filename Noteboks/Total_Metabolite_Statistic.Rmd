@@ -1,5 +1,5 @@
 ---
-title: "Total metabolites content of *U. sagitifolia*"
+title: "Statistic of total metabolite content in *U. sagitifolia*"
 author: "Jefferson Pastuna"
 date: "2023-12-20"
 output:
@@ -15,17 +15,13 @@ usethis::git_vaccinate()
 
 ```
 
-# Objetive
+# Introduction
 
-Description.
+The present document aims to record the procedure given for the statistical analysis of secondary metabolites quantification in the different growth stages of *Urospatha saggitifolia*. For each step a brief explanation, the code and graphics obtained are included.
 
-# Data adquisition
+## Data loading
 
-UV-vis data.
-
-## Load data
-
-Library:
+Installation of R packages and loading of the libraries.
 
 ```{r library, echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
 
@@ -42,55 +38,42 @@ library(ggbreak)
 
 ```
 
-Working directiry.
-
-```{r directory}
-
-ppath <- "F:/Jefferson-Pastuna/U_sagittifolia_tubers/"
-
-```
-
-Load data from Excel.
+Loaded Excel data.
 
 ```{r data}
 
-# To total phenolic content
-t_phenolic <- data.frame(readxl::read_excel("F:/Jefferson-Pastuna/U_sagittifolia_tubers/Data/Total_Metabolite_Content.xlsx", 1))
+# Data of total phenolic content
+total_phenolic <- data.frame(readxl::read_excel("../Data/Total_Metabolite_Content.xlsx", 1))
 
-# To total flavonoid content
-t_flavonoid <- data.frame(readxl::read_excel("F:/Jefferson-Pastuna/U_sagittifolia_tubers/Data/Total_Metabolite_Content.xlsx", 2))
+# Data of total flavonoid content
+total_flavonoid <- data.frame(readxl::read_excel("../Data/Total_Metabolite_Content.xlsx", 2))
 
 ```
 
 ## Boxplot
 
-Before AVOVA we can inspect the data.
+Before performing the ANOVA test we can inspect the data using boxplot. Next we extract the data for each growth stage.
 
 ```{r factor}
 
-# To total phenolic content
-s_phe <- t_phenolic[c(1:3),1]
-j_phe  <- t_phenolic[c(1:3),2]
-a_phe <- t_phenolic[c(1:3),3]
+# Total phenolic content in different growth stage
+s_phe <- total_phenolic[c(1:3),1]
+j_phe <- total_phenolic[c(1:3),2]
+a_phe <- total_phenolic[c(1:3),3]
 
-# To total flavonoid content
-s_fla <- t_flavonoid[c(1:3),1]
-j_fla  <- t_flavonoid[c(1:3),2]
-a_fla <- t_flavonoid[c(1:3),3]
-
-```
-
-Sample length.
-
-```{r n}
-
-n_sample  <- length(s_phe)
+# Total flavonoid content in different growth stage
+s_fla <- total_flavonoid[c(1:3),1]
+j_fla <- total_flavonoid[c(1:3),2]
+a_fla <- total_flavonoid[c(1:3),3]
 
 ```
 
-Data preparation to boxplot.
+Later we grouped the data to plotting boxplot.
 
 ```{r samples}
+
+# Sample length
+n_sample  <- length(s_phe)
 
 # To total phenolic content
 cont_phe <- c(s_phe,j_phe,a_phe)
