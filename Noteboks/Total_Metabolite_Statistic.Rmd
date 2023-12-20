@@ -1,0 +1,197 @@
+---
+title: "Total metabolites content of *U. sagitifolia*"
+author: "Jefferson Pastuna"
+date: "2023-12-20"
+output:
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+usethis::git_vaccinate()
+
+```
+
+# Objetive
+
+Description.
+
+# Data adquisition
+
+UV-vis data.
+
+## Load data
+
+Library:
+
+```{r library, echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
+
+# Loadding ggplot2 library
+library(ggplot2)
+
+# agricolae package installation and library loadding
+#install.packages("agricolae", repos = "https://cran.r-project.org")
+library(agricolae)
+
+# ggbreak agricolae package installation and library loadding
+remotes::install_github("YuLab-SMU/ggbreak")
+library(ggbreak)
+
+```
+
+Working directiry.
+
+```{r directory}
+
+ppath <- "F:/Jefferson-Pastuna/U_sagittifolia_tubers/"
+
+```
+
+Load data from Excel.
+
+```{r data}
+
+# To total phenolic content
+t_phenolic <- data.frame(readxl::read_excel("F:/Jefferson-Pastuna/U_sagittifolia_tubers/Data/Total_Metabolite_Content.xlsx", 1))
+
+# To total flavonoid content
+t_flavonoid <- data.frame(readxl::read_excel("F:/Jefferson-Pastuna/U_sagittifolia_tubers/Data/Total_Metabolite_Content.xlsx", 2))
+
+```
+
+## Boxplot
+
+Before AVOVA we can inspect the data.
+
+```{r factor}
+
+# To total phenolic content
+s_phe <- t_phenolic[c(1:3),1]
+j_phe  <- t_phenolic[c(1:3),2]
+a_phe <- t_phenolic[c(1:3),3]
+
+# To total flavonoid content
+s_fla <- t_flavonoid[c(1:3),1]
+j_fla  <- t_flavonoid[c(1:3),2]
+a_fla <- t_flavonoid[c(1:3),3]
+
+```
+
+Sample length.
+
+```{r n}
+
+n_sample  <- length(s_phe)
+
+```
+
+Data preparation to boxplot.
+
+```{r samples}
+
+# To total phenolic content
+cont_phe <- c(s_phe,j_phe,a_phe)
+rep_phe <- c(rep("Seedling",n_sample),rep("Juvenile",n_sample),rep("Adult",n_sample))
+datos_phe <- data.frame(rep_phe,cont_phe)
+
+# To total flavonoid content
+cont_flav <- c(s_fla,j_fla,a_fla)
+rep_flav <- c(rep("Seedling",n_sample),rep("Juvenile",n_sample),rep("Adult",n_sample))
+datos_flav <- data.frame(rep_flav,cont_flav)
+
+```
+
+Plotting boxplot.
+
+```{r box}
+
+# To total phenolic content
+bx_phe <- ggplot(datos_phe,aes(x=rep_phe,y=cont_phe,fill=rep_phe)) +
+  geom_boxplot() +
+  ggtitle("Boxplot of total phenolic content") +
+  guides(x=guide_axis(title = NULL),
+         y=guide_axis(title = "Total phenolic content \n(mg Gallic acid/g Extract)"),
+         fill=guide_legend(title="Growth stage")) +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+# To total flavonoid content
+bx_flav <- ggplot(datos_flav,aes(x=rep_flav,y=cont_flav,fill=rep_flav)) +
+  geom_boxplot() +
+  ggtitle("Boxplot of total flavinoid content") +
+  guides(x=guide_axis(title = NULL),
+         y=guide_axis(title = "Total flavonoid content \n(mg Quercetin/g Extract)"),
+         fill=guide_legend(title="Growth stage")) +
+  theme(axis.text.x=element_text(angle=90, hjust=1))
+
+bx_phe
+bx_flav
+
+```
+
+## Bartlett test
+
+Previus ANOVA test.
+
+```{r bartlett1}
+
+# To total phenolic content
+bartlett.test(cont_phe~rep_phe,data = datos_phe)
+
+```
+
+Because of p-value is 0.5407, and its mayor to 0.05, we accept (H0). Therefore, samples have same varinces.
+
+```{r bartlett2}
+
+# To total flavonoid content
+bartlett.test(cont_flav~rep_flav,data = datos_flav)
+
+```
+
+Because of p-value is 0.2058, and its mayor to 0.05, we accept (H0). Therefore, samples have same varinces.
+
+## ANOVA test
+
+ANOVA model.
+
+```{r logit}
+
+# Logit model to total phenolic content
+mylogit_phe <- glm(cont_phe~rep_phe,data = datos_phe)
+
+# Logit model to total flavonoid content
+mylogit_flav <- glm(cont_flav~rep_flav,data = datos_flav)
+
+```
+
+Print ANOVA test.
+
+```{r anova}
+
+# To total phenolic content
+anova(mylogit_phe,test="LRT")
+
+# To total flavonoid content
+anova(mylogit_flav,test="LRT")
+
+```
+
+## Tukey test
+
+```{r tukey}
+
+# To total phenolic content
+modelo_phe <- aov(cont_phe~rep_phe,data = datos_phe)
+tukey_phe <- HSD.test(modelo_phe,"rep_phe", group=TRUE,console=TRUE)
+plot(tukey_phe, cex.names=0.7, ylab = "Media diferences", main="Tukey to total phenolic content", font.main=3)
+
+# To total flavonoid content
+modelo_flav <- aov(cont_flav~rep_flav,data = datos_flav)
+tukey_flav <- HSD.test(modelo_flav,"rep_flav", group=TRUE,console=TRUE)
+plot(tukey_flav, cex.names=0.7, ylab = "Media diferences", main="Tukey to total flavonoid content", font.main=3)
+
+```
+
