@@ -53,13 +53,13 @@ library(ggsci)
 Then, a log system was added to have a record of each process executed.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
-init_log(log_file = "Result/GC-MS/log_GC-MS_EI.txt")
+init_log(log_file = "../Result/GC-MS/log_GC-MS_EI.txt")
 ```
 
 Next, the feature list was imported.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
-data <- read_from_excel(file = "Data/EI_feature_list.xlsx", sheet = 1, 
+data <- read_from_excel(file = "../Data/EI_feature_list.xlsx", sheet = 1, 
                         corner_row = 4, corner_column = "E", 
                         split_by = c("Column", "Ion Mode"))
 ```
@@ -187,7 +187,7 @@ loadings <- EI_pca$rotation %>%    # Extract loadings
 Creating an artificial table with Feature name and Compound column.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, error=FALSE, results='hide'}
-EI_feat_name <- readxl::read_excel("Data/EI_Metabolites.xlsx", 2)
+EI_feat_name <- readxl::read_excel("../Data/EI_Metabolites.xlsx", 2)
 
 # Creating a new small table of the annotated compounds
 EI_compouds_all <- left_join(EI_feat_name, loadings)

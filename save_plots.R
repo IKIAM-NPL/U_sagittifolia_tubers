@@ -30,7 +30,7 @@ POS_scores <- POS_scores %>% mutate(Group =
 scores_post_plt <- ggplot(POS_scores, 
                           aes(PC1, PC2, shape = Group, color = Group)) +
   geom_point(size = 5) +
-  guides(x=guide_axis(title = "PC 1 (41%)"),
+  guides(x=guide_axis(title = "PC 1 (43%)"),
          y=guide_axis(title = "PC 2 (20%)")) +
   labs(color = "Growth stage", shape = "Growth stage") +
   ggsci::scale_color_startrek() +
@@ -81,8 +81,8 @@ NEG_scores <- NEG_scores %>%  mutate(Group =
 scores_neg_plt <- ggplot(NEG_scores, 
        aes(PC1, PC2, shape = Group, color = Group)) +
   geom_point(size = 5) +
-  guides(x=guide_axis(title = "PC 1 (43%)"),
-         y=guide_axis(title = "PC 2 (20%)")) +
+  guides(x=guide_axis(title = "PC 1 (40%)"),
+         y=guide_axis(title = "PC 2 (23%)")) +
   labs(color = "Growth stage", shape = "Growth stage") +
   ggsci::scale_color_startrek() +
   theme_minimal() +
@@ -106,7 +106,7 @@ NEG_loadings_plt <- ggplot(NEG_loadings, aes(PC1, PC2)) +
   geom_vline(xintercept = 0, lty = 2, color = "grey", alpha = 0.9) +
   ggrepel::geom_label_repel(data = NEG_compouds_all, aes(label = Compound),
                             box.padding = 0.3, max.overlaps = 50) +
-  guides(x=guide_axis(title = "PC 1 (43%)"), y=guide_axis(title = "PC 2 (20%)")) +
+  guides(x=guide_axis(title = "PC 1 (40%)"), y=guide_axis(title = "PC 2 (23%)")) +
   scale_color_manual(values = c("#EE0000FF", "#3B4992FF")) +
   theme_minimal() +
   theme(legend.position = c(0.05, 0.85), 
@@ -144,7 +144,7 @@ figure_1 <- ggpubr::as_ggplot(Figure1) +
 
 # JPEG
 ggsave(filename = "Plots/jpeg/Figure_1.jpeg", plot = figure_1,
-       width = 140, height = 180, units = "mm", dpi = 300, scale = 2.15)
+       width = 140, height = 180, units = "mm", dpi = 300, scale = 2.5)
 
 # PDF
 ggsave(filename = "Plots/pdf/Figure_1.pdf", plot = figure_1,
@@ -169,8 +169,8 @@ GC_scores <- scores  %>% mutate(Group =
 scores_GC_plt <- ggplot(GC_scores, 
                           aes(PC1, PC2, shape = Group, color = Group)) +
   geom_point(size = 3) +
-  guides(x=guide_axis(title = "PC 1 (43%)"),
-         y=guide_axis(title = "PC 2 (20%)")) +
+  guides(x=guide_axis(title = "PC 1 (62%)"),
+         y=guide_axis(title = "PC 2 (15%)")) +
   labs(color = "Growth stage", shape = "Growth stage") +
   ggsci::scale_color_startrek() +
   theme_minimal() +

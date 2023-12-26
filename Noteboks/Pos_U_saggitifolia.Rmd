@@ -151,7 +151,7 @@ POS_scores <- POS_pca_noQC$x %>%         # Get PC coordinates
 
 ggplot(POS_scores, aes(PC1, PC2, shape = Group, color = Group)) +
   geom_point(size = 3) +
-  guides(x=guide_axis(title = "PC 1 (41%)"), y=guide_axis(title = "PC 2 (20%)")) +
+  guides(x=guide_axis(title = "PC 1 (43%)"), y=guide_axis(title = "PC 2 (20%)")) +
   theme_classic()
 
 # Save plot
