@@ -20,21 +20,12 @@ explanation, the code and graphics obtained are included.
 
 - LC-(QTOF)
 
-<figure>
-<img src="Plots/jpeg/Figure_1.jpeg"
-alt="PCA analysis for positive (A and C) and negative (B and D) polarity" />
-<figcaption aria-hidden="true">PCA analysis for positive (A and C) and
-negative (B and D) polarity</figcaption>
-</figure>
+![PCA analysis for positive (A and C) and negative (B and D)
+polarity](Plots/jpeg/Figure_1.jpeg)
 
 - GC-(Q)MS
 
-<figure>
-<img src="Plots/jpeg/Figure_3.jpeg"
-alt="PCA analysis of the volatile metabolome" />
-<figcaption aria-hidden="true">PCA analysis of the volatile
-metabolome</figcaption>
-</figure>
+![PCA analysis of the volatile metabolome](Plots/jpeg/Figure_2.jpeg)
 
 ## Heatmaps and HCA
 
