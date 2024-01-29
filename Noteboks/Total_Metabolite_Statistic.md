@@ -1,28 +1,25 @@
-Total metabolites content of *U. sagitifolia*
+Statistic of total metabolite content in *U. sagitifolia*
 ================
 Jefferson Pastuna
 2023-12-20
 
-- <a href="#objetive" id="toc-objetive">Objetive</a>
-- <a href="#data-adquisition" id="toc-data-adquisition">Data
-  adquisition</a>
-  - <a href="#load-data" id="toc-load-data">Load data</a>
+- <a href="#introduction" id="toc-introduction">Introduction</a>
+  - <a href="#data-loading" id="toc-data-loading">Data loading</a>
   - <a href="#boxplot" id="toc-boxplot">Boxplot</a>
   - <a href="#bartlett-test" id="toc-bartlett-test">Bartlett test</a>
   - <a href="#anova-test" id="toc-anova-test">ANOVA test</a>
   - <a href="#tukey-test" id="toc-tukey-test">Tukey test</a>
 
-# Objetive
+# Introduction
 
-Description.
+The present document aims to record the procedure given for the
+statistical analysis of secondary metabolites quantification in the
+different growth stages of *Urospatha saggitifolia*. For each step a
+brief explanation, the code and graphics obtained are included.
 
-# Data adquisition
+## Data loading
 
-UV-vis data.
-
-## Load data
-
-Library:
+Installation of R packages and loading of the libraries.
 
 ``` r
 # Loadding ggplot2 library
@@ -37,47 +34,39 @@ remotes::install_github("YuLab-SMU/ggbreak")
 library(ggbreak)
 ```
 
-Working directiry.
+Loaded Excel data.
 
 ``` r
-ppath <- "F:/Jefferson-Pastuna/U_sagittifolia_tubers/"
-```
+# Data of total phenolic content
+total_phenolic <- data.frame(readxl::read_excel("../Data/Total_Metabolite_Content.xlsx", 1))
 
-Load data from Excel.
-
-``` r
-# To total phenolic content
-t_phenolic <- data.frame(readxl::read_excel("F:/Jefferson-Pastuna/U_sagittifolia_tubers/Data/Total_Metabolite_Content.xlsx", 1))
-
-# To total flavonoid content
-t_flavonoid <- data.frame(readxl::read_excel("F:/Jefferson-Pastuna/U_sagittifolia_tubers/Data/Total_Metabolite_Content.xlsx", 2))
+# Data of total flavonoid content
+total_flavonoid <- data.frame(readxl::read_excel("../Data/Total_Metabolite_Content.xlsx", 2))
 ```
 
 ## Boxplot
 
-Before AVOVA we can inspect the data.
+Before performing the ANOVA test we can inspect the data using boxplot.
+Next we extract the data for each growth stage.
 
 ``` r
-# To total phenolic content
-s_phe <- t_phenolic[c(1:3),1]
-j_phe  <- t_phenolic[c(1:3),2]
-a_phe <- t_phenolic[c(1:3),3]
+# Total phenolic content in different growth stage
+s_phe <- total_phenolic[c(1:3),1]
+j_phe <- total_phenolic[c(1:3),2]
+a_phe <- total_phenolic[c(1:3),3]
 
-# To total flavonoid content
-s_fla <- t_flavonoid[c(1:3),1]
-j_fla  <- t_flavonoid[c(1:3),2]
-a_fla <- t_flavonoid[c(1:3),3]
+# Total flavonoid content in different growth stage
+s_fla <- total_flavonoid[c(1:3),1]
+j_fla <- total_flavonoid[c(1:3),2]
+a_fla <- total_flavonoid[c(1:3),3]
 ```
 
-Sample length.
+Later we grouped the data to plotting boxplot.
 
 ``` r
+# Sample length
 n_sample  <- length(s_phe)
-```
 
-Data preparation to boxplot.
-
-``` r
 # To total phenolic content
 cont_phe <- c(s_phe,j_phe,a_phe)
 rep_phe <- c(rep("Seedling",n_sample),rep("Juvenile",n_sample),rep("Adult",n_sample))
@@ -97,7 +86,7 @@ bx_phe <- ggplot(datos_phe,aes(x=rep_phe,y=cont_phe,fill=rep_phe)) +
   geom_boxplot() +
   ggtitle("Boxplot of total phenolic content") +
   guides(x=guide_axis(title = NULL),
-         y=guide_axis(title = "Total phenolic content \n(mg Gallic acid/g Extract)"),
+         y=guide_axis(title = "Total phenolic content \n(ug Gallic acid/mg Extract)"),
          fill=guide_legend(title="Growth stage")) +
   theme(axis.text.x=element_text(angle=90, hjust=1))
 
@@ -106,7 +95,7 @@ bx_flav <- ggplot(datos_flav,aes(x=rep_flav,y=cont_flav,fill=rep_flav)) +
   geom_boxplot() +
   ggtitle("Boxplot of total flavinoid content") +
   guides(x=guide_axis(title = NULL),
-         y=guide_axis(title = "Total flavonoid content \n(mg Quercetin/g Extract)"),
+         y=guide_axis(title = "Total flavonoid content \n(ug Quercetin/mg Extract)"),
          fill=guide_legend(title="Growth stage")) +
   theme(axis.text.x=element_text(angle=90, hjust=1))
 
@@ -123,8 +112,6 @@ bx_flav
 
 ## Bartlett test
 
-Previus ANOVA test.
-
 ``` r
 # To total phenolic content
 bartlett.test(cont_phe~rep_phe,data = datos_phe)
@@ -136,8 +123,8 @@ bartlett.test(cont_phe~rep_phe,data = datos_phe)
     ## data:  cont_phe by rep_phe
     ## Bartlett's K-squared = 1.2298, df = 2, p-value = 0.5407
 
-Because of p-value is 0.5407, and its mayor to 0.05, we accept (H0).
-Therefore, samples have same varinces.
+Because the p-value is 0.5407 and its mayor is 0.05, we accept (H0).
+Therefore, the samples had equal variance.
 
 ``` r
 # To total flavonoid content
@@ -150,12 +137,10 @@ bartlett.test(cont_flav~rep_flav,data = datos_flav)
     ## data:  cont_flav by rep_flav
     ## Bartlett's K-squared = 3.1618, df = 2, p-value = 0.2058
 
-Because of p-value is 0.2058, and its mayor to 0.05, we accept (H0).
-Therefore, samples have same varinces.
+Because the p-value is 0.2058 and its mayor is 0.05, we accept (H0).
+Therefore, the samples had equal variance.
 
 ## ANOVA test
-
-ANOVA model.
 
 ``` r
 # Logit model to total phenolic content
@@ -165,7 +150,7 @@ mylogit_phe <- glm(cont_phe~rep_phe,data = datos_phe)
 mylogit_flav <- glm(cont_flav~rep_flav,data = datos_flav)
 ```
 
-Print ANOVA test.
+ANOVA test result.
 
 ``` r
 # To total phenolic content
@@ -242,7 +227,7 @@ tukey_phe <- HSD.test(modelo_phe,"rep_phe", group=TRUE,console=TRUE)
     ## Seedling 17.09333      c
 
 ``` r
-plot(tukey_phe, cex.names=0.7, ylab = "Media diferences", main="Tukey to total phenolic content", font.main=3)
+plot(tukey_phe, cex.names=0.7, ylab = "Mean difference", main="Tukey test of total phenolic content", font.main=3)
 ```
 
 ![](Total_Metabolite_Statistic_files/figure-gfm/tukey-1.png)<!-- -->
@@ -280,7 +265,7 @@ tukey_flav <- HSD.test(modelo_flav,"rep_flav", group=TRUE,console=TRUE)
     ## Seedling  6.830333      b
 
 ``` r
-plot(tukey_flav, cex.names=0.7, ylab = "Media diferences", main="Tukey to total flavonoid content", font.main=3)
+plot(tukey_flav, cex.names=0.7, ylab = "Mean difference", main="Tukey test of total flavonoid content", font.main=3)
 ```
 
 ![](Total_Metabolite_Statistic_files/figure-gfm/tukey-2.png)<!-- -->

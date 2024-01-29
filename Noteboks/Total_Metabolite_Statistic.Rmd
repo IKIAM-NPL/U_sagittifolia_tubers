@@ -96,7 +96,7 @@ bx_phe <- ggplot(datos_phe,aes(x=rep_phe,y=cont_phe,fill=rep_phe)) +
   geom_boxplot() +
   ggtitle("Boxplot of total phenolic content") +
   guides(x=guide_axis(title = NULL),
-         y=guide_axis(title = "Total phenolic content \n(mg Gallic acid/g Extract)"),
+         y=guide_axis(title = "Total phenolic content \n(ug Gallic acid/mg Extract)"),
          fill=guide_legend(title="Growth stage")) +
   theme(axis.text.x=element_text(angle=90, hjust=1))
 
@@ -105,7 +105,7 @@ bx_flav <- ggplot(datos_flav,aes(x=rep_flav,y=cont_flav,fill=rep_flav)) +
   geom_boxplot() +
   ggtitle("Boxplot of total flavinoid content") +
   guides(x=guide_axis(title = NULL),
-         y=guide_axis(title = "Total flavonoid content \n(mg Quercetin/g Extract)"),
+         y=guide_axis(title = "Total flavonoid content \n(ug Quercetin/mg Extract)"),
          fill=guide_legend(title="Growth stage")) +
   theme(axis.text.x=element_text(angle=90, hjust=1))
 
@@ -116,8 +116,6 @@ bx_flav
 
 ## Bartlett test
 
-Previus ANOVA test.
-
 ```{r bartlett1}
 
 # To total phenolic content
@@ -125,7 +123,7 @@ bartlett.test(cont_phe~rep_phe,data = datos_phe)
 
 ```
 
-Because of p-value is 0.5407, and its mayor to 0.05, we accept (H0). Therefore, samples have same varinces.
+Because the p-value is 0.5407 and its mayor is 0.05, we accept (H0). Therefore, the samples had equal variance.
 
 ```{r bartlett2}
 
@@ -134,11 +132,9 @@ bartlett.test(cont_flav~rep_flav,data = datos_flav)
 
 ```
 
-Because of p-value is 0.2058, and its mayor to 0.05, we accept (H0). Therefore, samples have same varinces.
+Because the p-value is 0.2058 and its mayor is 0.05, we accept (H0). Therefore, the samples had equal variance.
 
 ## ANOVA test
-
-ANOVA model.
 
 ```{r logit}
 
@@ -150,7 +146,7 @@ mylogit_flav <- glm(cont_flav~rep_flav,data = datos_flav)
 
 ```
 
-Print ANOVA test.
+ANOVA test result.
 
 ```{r anova}
 
@@ -169,12 +165,12 @@ anova(mylogit_flav,test="LRT")
 # To total phenolic content
 modelo_phe <- aov(cont_phe~rep_phe,data = datos_phe)
 tukey_phe <- HSD.test(modelo_phe,"rep_phe", group=TRUE,console=TRUE)
-plot(tukey_phe, cex.names=0.7, ylab = "Media diferences", main="Tukey to total phenolic content", font.main=3)
+plot(tukey_phe, cex.names=0.7, ylab = "Mean difference", main="Tukey test of total phenolic content", font.main=3)
 
 # To total flavonoid content
 modelo_flav <- aov(cont_flav~rep_flav,data = datos_flav)
 tukey_flav <- HSD.test(modelo_flav,"rep_flav", group=TRUE,console=TRUE)
-plot(tukey_flav, cex.names=0.7, ylab = "Media diferences", main="Tukey to total flavonoid content", font.main=3)
+plot(tukey_flav, cex.names=0.7, ylab = "Mean difference", main="Tukey test of total flavonoid content", font.main=3)
 
 ```
 
